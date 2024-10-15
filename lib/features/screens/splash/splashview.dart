@@ -33,13 +33,16 @@ class _SplashviewState extends State<Splashview> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FadeInDown(
-              delay: Duration(seconds: 1),
               child: Image.asset(
                 'assets/images/logo.jpg',
                 width: 70,
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             FadeInUp(
+              delay: Duration(seconds: 1),
               child: Text(
                 'Smart Pill',
                 style: theme.textTheme.bodyLarge?.copyWith(color: Colors.red),
