@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
+import 'package:smartpill/core/theme/color_pallets.dart';
 
 class Splashview extends StatefulWidget {
   const Splashview({super.key});
@@ -34,7 +35,7 @@ class _SplashviewState extends State<Splashview> {
           children: [
             FadeInDown(
               child: Image.asset(
-                'assets/images/logo.jpg',
+                'assets/images/logo.png',
                 width: 70,
               ),
             ),
@@ -45,7 +46,8 @@ class _SplashviewState extends State<Splashview> {
               delay: Duration(seconds: 1),
               child: Text(
                 'Smart Pill',
-                style: theme.textTheme.bodyLarge?.copyWith(color: Colors.red),
+                style: theme.textTheme.bodyLarge
+                    ?.copyWith(color: ColorPallets.redbutton),
               ),
             )
           ],

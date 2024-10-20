@@ -5,6 +5,10 @@ class AppThemeManager {
   static Color primary = ColorPallets.primaryColor;
   static ThemeData lightThemeManager = ThemeData(
     primaryColor: primary,
+    appBarTheme: AppBarTheme(
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: primary)),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(
           color: Colors.black,
