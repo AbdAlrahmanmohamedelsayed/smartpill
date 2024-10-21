@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
-import 'package:smartpill/features/screens/onboarding/widgets/custom_image.dart';
+import 'package:lottie/lottie.dart';
 
 class OnboardingView extends StatelessWidget {
   const OnboardingView({super.key});
@@ -27,7 +27,7 @@ class OnboardingView extends StatelessWidget {
           style: theme.textTheme.bodySmall?.copyWith(
               fontSize: 20,
               color: theme.primaryColor,
-              fontWeight: FontWeight.bold)),
+              fontWeight: FontWeight.w700)),
       trailingFunction: () {
         Navigator.pushNamed(context, PageRoutesName.signup);
       },
@@ -37,15 +37,30 @@ class OnboardingView extends StatelessWidget {
       pageBackgroundColor: Colors.white,
       centerBackground: true,
       background: [
-        CustomImage(imagePath: 'assets/images/onboard_1.jpg'),
-        CustomImage(imagePath: 'assets/images/onboard_2.jpg'),
-        CustomImage(imagePath: 'assets/images/onboard_3.jpg'),
-        CustomImage(imagePath: 'assets/images/onboard_4.jpg'),
+        Padding(
+          padding: const EdgeInsets.only(top: 45.0),
+          child: Lottie.asset(width: 250, 'assets/images/Lottie/on_1.json'),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 45.0),
+          child:
+              Lottie.asset(width: 250, 'assets/images/Lottie/onboarding2.json'),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 45.0),
+          child:
+              Lottie.asset(width: 250, 'assets/images/Lottie/onboarding3.json'),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 45.0),
+          child:
+              Lottie.asset(width: 200, 'assets/images/Lottie/onboarding4.json'),
+        ),
       ],
       speed: 1.9,
       pageBodies: [
         FadeInRight(
-          delay: const Duration(seconds: 1),
+          delay: const Duration(milliseconds: 500),
           child: Container(
             alignment: Alignment.center,
             width: media.size.width,
@@ -136,7 +151,7 @@ class OnboardingView extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                    'Where everything is possible and customize your onboarding.',
+                    'Monitor your medication intake and share reports with your family or doctor.',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodySmall),
               ],
@@ -157,7 +172,7 @@ class OnboardingView extends StatelessWidget {
                   height: 480,
                 ),
                 Text(
-                  'Stay in touch with your loved ones',
+                  'AI-Powered Medication Tips',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: theme.primaryColor,
@@ -169,7 +184,7 @@ class OnboardingView extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                    'Share medication status with family members or caregivers in real time..',
+                    'Get personalized, AI-driven advice tailored to your medication needs.',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodySmall),
               ],

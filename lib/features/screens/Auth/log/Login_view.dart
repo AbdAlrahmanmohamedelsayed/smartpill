@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 
@@ -32,8 +33,8 @@ class _LoginViewState extends State<LoginView> {
                 FadeInRight(
                   delay: const Duration(microseconds: 550),
                   child: Container(
+                    padding: const EdgeInsets.only(top: 40),
                     width: media.width,
-                    height: media.height * .12,
                     alignment: Alignment.bottomCenter,
                     child: Text(
                       'Login',
@@ -45,13 +46,8 @@ class _LoginViewState extends State<LoginView> {
                 FadeInDown(
                   delay: const Duration(microseconds: 400),
                   child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 10),
-                      width: 450,
-                      child: Image.asset(
-                        'assets/images/Login.png',
-                        fit: BoxFit.cover,
-                      )),
+                      alignment: Alignment.center,
+                      child: Image.asset('assets/images/Login.png')),
                 ),
                 FadeInRight(
                   delay: const Duration(microseconds: 550),
@@ -68,50 +64,53 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(
                   height: 20,
                 ),
-                TextFormField(
-                  controller: emailcontroller,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "plz enter your emaail";
-                    }
-                    var regexp = RegExp(
-                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                    if (!regexp.hasMatch(value)) {
-                      return 'Invalid email';
-                    }
-                    return null;
-                  },
-                  cursorColor: ColorPallets.redbutton,
-                  style: theme.textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(16),
-                    suffix: Icon(
-                      Icons.email,
-                      color: theme.primaryColor,
-                    ),
-                    label: Text(
-                      'E-mail',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    hintText: 'enter your email ',
-                    hintStyle: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.black38),
-                    border: OutlineInputBorder(
+                Container(
+                  // margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: TextFormField(
+                    controller: emailcontroller,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "plz enter your emaail";
+                      }
+                      var regexp = RegExp(
+                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                      if (!regexp.hasMatch(value)) {
+                        return 'Invalid email';
+                      }
+                      return null;
+                    },
+                    cursorColor: ColorPallets.redbutton,
+                    style: theme.textTheme.bodySmall,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(16),
+                      suffix: Icon(
+                        Icons.email,
+                        color: theme.primaryColor,
+                      ),
+                      label: Text(
+                        'E-mail',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            fontSize: 20,
+                            color: theme.primaryColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      hintText: 'enter your email ',
+                      hintStyle: theme.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500, color: Colors.black38),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide:
+                              BorderSide(width: 2, color: theme.primaryColor)),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                         borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
+                            BorderSide(width: 2, color: theme.primaryColor),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide:
+                            BorderSide(width: 2, color: theme.primaryColor),
+                      ),
                     ),
                   ),
                 ),
@@ -178,7 +177,7 @@ class _LoginViewState extends State<LoginView> {
                             borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 20),
-                        backgroundColor: Colors.red),
+                        backgroundColor: ColorPallets.redbutton),
                     onPressed: () {
                       // if (formkey.currentState!.validate()) {
                       //   print('valid email');
