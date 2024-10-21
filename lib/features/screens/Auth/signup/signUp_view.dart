@@ -11,13 +11,14 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   bool isObscure = true;
+  TextEditingController usernamecontrolar = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontrolar = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var formkey = GlobalKey<FormState>();
     var theme = Theme.of(context);
-    var media = MediaQuery.sizeOf(context);
+    // var media = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -47,7 +48,7 @@ class _SignupViewState extends State<SignupView> {
                       )),
                 ),
                 TextFormField(
-                  controller: emailcontroller,
+                  controller: usernamecontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return "plz enter your full name";
@@ -55,7 +56,7 @@ class _SignupViewState extends State<SignupView> {
 
                     return null;
                   },
-                  cursorColor: ColorPallets.redbutton,
+                  cursorColor: ColorPallets.redColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(16),
@@ -105,7 +106,7 @@ class _SignupViewState extends State<SignupView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redbutton,
+                  cursorColor: ColorPallets.redColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(16),
@@ -151,7 +152,7 @@ class _SignupViewState extends State<SignupView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redbutton,
+                  cursorColor: ColorPallets.redColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12),

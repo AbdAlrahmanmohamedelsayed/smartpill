@@ -47,7 +47,7 @@ class _SplashviewState extends State<Splashview> {
               child: Text(
                 'Smart Pill',
                 style: theme.textTheme.bodyLarge
-                    ?.copyWith(color: ColorPallets.redbutton),
+                    ?.copyWith(color: ColorPallets.redColor),
               ),
             )
           ],

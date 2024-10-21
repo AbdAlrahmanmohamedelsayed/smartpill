@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 
@@ -64,53 +63,50 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  // margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: TextFormField(
-                    controller: emailcontroller,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "plz enter your emaail";
-                      }
-                      var regexp = RegExp(
-                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                      if (!regexp.hasMatch(value)) {
-                        return 'Invalid email';
-                      }
-                      return null;
-                    },
-                    cursorColor: ColorPallets.redbutton,
-                    style: theme.textTheme.bodySmall,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(16),
-                      suffix: Icon(
-                        Icons.email,
-                        color: theme.primaryColor,
-                      ),
-                      label: Text(
-                        'E-mail',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            fontSize: 20,
-                            color: theme.primaryColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      hintText: 'enter your email ',
-                      hintStyle: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500, color: Colors.black38),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide:
-                              BorderSide(width: 2, color: theme.primaryColor)),
-                      enabledBorder: OutlineInputBorder(
+                TextFormField(
+                  controller: emailcontroller,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "plz enter your emaail";
+                    }
+                    var regexp = RegExp(
+                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                    if (!regexp.hasMatch(value)) {
+                      return 'Invalid email';
+                    }
+                    return null;
+                  },
+                  cursorColor: ColorPallets.redColor,
+                  style: theme.textTheme.bodySmall,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(16),
+                    suffix: Icon(
+                      Icons.email,
+                      color: theme.primaryColor,
+                    ),
+                    label: Text(
+                      'E-mail',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          fontSize: 20,
+                          color: theme.primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    hintText: 'enter your email ',
+                    hintStyle: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500, color: Colors.black38),
+                    border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                         borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor),
-                      ),
+                            BorderSide(width: 2, color: theme.primaryColor)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(width: 2, color: theme.primaryColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(width: 2, color: theme.primaryColor),
                     ),
                   ),
                 ),
@@ -126,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redbutton,
+                  cursorColor: ColorPallets.redColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12),
@@ -177,12 +173,13 @@ class _LoginViewState extends State<LoginView> {
                             borderRadius: BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 20),
-                        backgroundColor: ColorPallets.redbutton),
+                        backgroundColor: ColorPallets.redColor),
                     onPressed: () {
                       // if (formkey.currentState!.validate()) {
                       //   print('valid email');
                       // }
-                      Navigator.pushNamed(context, PageRoutesName.layout);
+                      Navigator.pushReplacementNamed(
+                          context, PageRoutesName.layout);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,7 +217,7 @@ class _LoginViewState extends State<LoginView> {
                             'SignUp',
                             style: theme.textTheme.bodySmall?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: ColorPallets.redbutton),
+                                color: ColorPallets.redColor),
                           ))
                     ],
                   ),

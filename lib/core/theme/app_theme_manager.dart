@@ -4,7 +4,12 @@ import 'package:smartpill/core/theme/color_pallets.dart';
 class AppThemeManager {
   static Color primary = ColorPallets.primaryColor;
   static ThemeData lightThemeManager = ThemeData(
+    scaffoldBackgroundColor: Colors.white,
     primaryColor: primary,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        showUnselectedLabels: false,
+        selectedItemColor: primary,
+        backgroundColor: ColorPallets.Colowhite),
     appBarTheme: AppBarTheme(
         centerTitle: true,
         backgroundColor: Colors.white,
