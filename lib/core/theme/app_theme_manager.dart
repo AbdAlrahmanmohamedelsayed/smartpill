@@ -15,6 +15,11 @@ class AppThemeManager {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: primary)),
     textTheme: const TextTheme(
+      titleLarge: TextStyle(
+          color: Colors.white,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Exo'),
       bodyLarge: TextStyle(
           color: Colors.black,
           fontSize: 28,

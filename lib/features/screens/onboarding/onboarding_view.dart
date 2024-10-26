@@ -151,7 +151,7 @@ class OnboardingView extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                    'Monitor your medication intake and share reports with your family or doctor.',
+                    'Monitor your medication intake and share reports with your caregiver or doctor.',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodySmall),
               ],

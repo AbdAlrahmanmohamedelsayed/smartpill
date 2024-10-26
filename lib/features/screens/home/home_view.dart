@@ -63,12 +63,12 @@ class _HomeViewState extends State<HomeView> {
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           monthStrStyle: const TextStyle(
-                              color: Colors.black,
+                              color: Colors.red,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           dayStrStyle: const TextStyle(
-                              color: Colors.black,
+                              color: Colors.red,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
@@ -76,22 +76,22 @@ class _HomeViewState extends State<HomeView> {
                         activeDayStyle: DayStyle(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                width: 3, color: ColorPallets.redColor),
-                            color: ColorPallets.Colowhite,
+                                width: 2, color: ColorPallets.redColor),
+                            color: theme.primaryColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           dayNumStyle: const TextStyle(
-                              color: ColorPallets.redColor,
+                              color: ColorPallets.Colowhite,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           monthStrStyle: const TextStyle(
-                              color: ColorPallets.redColor,
+                              color: ColorPallets.Colowhite,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           dayStrStyle: const TextStyle(
-                              color: ColorPallets.redColor,
+                              color: ColorPallets.Colowhite,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),

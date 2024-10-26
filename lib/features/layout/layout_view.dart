@@ -15,7 +15,7 @@ class _LayoutViewState extends State<LayoutView> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    // var theme = Theme.of(context);
 
     return Scaffold(
       body: screens[selectedIndex],
