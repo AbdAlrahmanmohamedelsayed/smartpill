@@ -5,6 +5,7 @@ import 'package:smartpill/features/screens/Auth/log/Login_view.dart';
 import 'package:smartpill/features/screens/admin/admin_view.dart';
 import 'package:smartpill/features/screens/onboarding/onboarding_view.dart';
 import 'package:smartpill/features/screens/Auth/signup/signUp_view.dart';
+import 'package:smartpill/features/screens/settings/setting_screens/theme_and_lang_view.dart';
 import 'package:smartpill/features/screens/splash/splashview.dart';
 
 class AppRouter {
@@ -28,6 +29,9 @@ class AppRouter {
       case PageRoutesName.admin:
         return MaterialPageRoute(
             builder: (context) => AdminView(), settings: settings);
+      case PageRoutesName.theme:
+        return MaterialPageRoute(
+            builder: (context) => ThemeandLangView(), settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => Splashview(), settings: settings);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/features/screens/settings/widgets/custom_listTile.dart';
 
 class SettingsView extends StatelessWidget {
@@ -7,7 +8,6 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-
     var media = MediaQuery.of(context);
     return Column(
       children: [
@@ -29,7 +29,9 @@ class SettingsView extends StatelessWidget {
           height: 20,
         ),
         CustomListtile(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(context, PageRoutesName.theme);
+          },
           imagePath: 'assets/images/icons/staging.png',
           tittle: 'Theme && languages',
         ),
