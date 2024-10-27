@@ -39,7 +39,17 @@ class _HomeViewState extends State<HomeView> {
               ),
               Positioned(
                 top: 150,
-                child: SizedBox(
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        offset: const Offset(0, 4),
+                        blurRadius: 15,
+                        spreadRadius: 3,
+                      ),
+                    ],
+                  ),
                   width: medi.size.width,
                   child: EasyInfiniteDateTimeLine(
                     controller: _controller,
@@ -75,8 +85,8 @@ class _HomeViewState extends State<HomeView> {
                         ),
                         activeDayStyle: DayStyle(
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 2, color: ColorPallets.redColor),
+                            // border: Border.all(
+                            //     width: 2, color: ColorPallets.redColor),
                             color: theme.primaryColor,
                             borderRadius: BorderRadius.circular(10),
                           ),

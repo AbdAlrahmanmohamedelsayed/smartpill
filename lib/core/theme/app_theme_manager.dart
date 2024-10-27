@@ -7,9 +7,14 @@ class AppThemeManager {
     scaffoldBackgroundColor: Colors.white,
     primaryColor: primary,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        showUnselectedLabels: false,
-        selectedItemColor: primary,
-        backgroundColor: ColorPallets.Colowhite),
+      showUnselectedLabels: false,
+      selectedItemColor: primary,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      shape: StadiumBorder(side: BorderSide(width: 5, color: primary)),
+    ),
     appBarTheme: AppBarTheme(
         centerTitle: true,
         backgroundColor: Colors.white,

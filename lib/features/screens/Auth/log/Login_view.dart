@@ -11,6 +11,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  String? users;
   bool isObscure = true;
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontrolar = TextEditingController();
@@ -163,7 +164,49 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        Radio(
+                          activeColor: theme.primaryColor,
+                          value: 'user',
+                          groupValue: users,
+                          onChanged: (val) {
+                            setState(() {
+                              users = val;
+                            });
+                          },
+                        ),
+                        Text(
+                          'User',
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: theme.primaryColor),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Radio(
+                            activeColor: theme.primaryColor,
+                            value: 'admin',
+                            groupValue: users,
+                            onChanged: (val) {
+                              setState(() {
+                                users = val;
+                              });
+                            }),
+                        Text(
+                          'Admin',
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: theme.primaryColor),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
                 FadeInUp(
                   delay: const Duration(milliseconds: 250),
@@ -178,8 +221,12 @@ class _LoginViewState extends State<LoginView> {
                       // if (formkey.currentState!.validate()) {
                       //   print('valid email');
                       // }
-                      Navigator.pushReplacementNamed(
-                          context, PageRoutesName.layout);
+
+                      if (users == 'admin') {
+                        Navigator.pushNamed(context, PageRoutesName.admin);
+                      } else {
+                        Navigator.pushNamed(context, PageRoutesName.layout);
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -12,27 +12,27 @@ class SettingsView extends StatelessWidget {
     return Column(
       children: [
         Container(
+          decoration: BoxDecoration(
+              color: theme.primaryColor,
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20))),
           width: media.size.width,
-          height: media.size.height * .20,
-          color: theme.primaryColor,
+          height: media.size.height * .22,
           alignment: Alignment.center,
           child: Text(
             'Settings',
             style: theme.textTheme.titleLarge,
           ),
         ),
-        CustomListtile(
-          onTap: () {},
-          imagePath: 'assets/images/icons/theme.png',
-          tittle: 'Theme Mode',
-        ),
         const SizedBox(
           height: 20,
         ),
         CustomListtile(
-            onTap: () {},
-            imagePath: 'assets/images/icons/languages.png',
-            tittle: 'languages'),
+          onTap: () {},
+          imagePath: 'assets/images/icons/staging.png',
+          tittle: 'Theme && languages',
+        ),
         const SizedBox(
           height: 20,
         ),
@@ -40,6 +40,9 @@ class SettingsView extends StatelessWidget {
           onTap: () {},
           imagePath: 'assets/images/icons/information.png',
           tittle: 'About As',
+        ),
+        const SizedBox(
+          height: 20,
         ),
         CustomListtile(
           onTap: () {},

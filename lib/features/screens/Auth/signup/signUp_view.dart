@@ -10,6 +10,7 @@ class SignupView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignupView> {
+  String? users;
   bool isObscure = true;
   TextEditingController usernamecontrolar = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
@@ -193,7 +194,49 @@ class _SignupViewState extends State<SignupView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        Radio(
+                          activeColor: theme.primaryColor,
+                          value: 'user',
+                          groupValue: users,
+                          onChanged: (val) {
+                            setState(() {
+                              users = val;
+                            });
+                          },
+                        ),
+                        Text(
+                          'User',
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: theme.primaryColor),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Radio(
+                            activeColor: theme.primaryColor,
+                            value: 'admin',
+                            groupValue: users,
+                            onChanged: (val) {
+                              setState(() {
+                                users = val;
+                              });
+                            }),
+                        Text(
+                          'Admin',
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: theme.primaryColor),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
                 FadeInUp(
                   delay: const Duration(milliseconds: 250),
@@ -205,9 +248,9 @@ class _SignupViewState extends State<SignupView> {
                             horizontal: 30, vertical: 20),
                         backgroundColor: Colors.red),
                     onPressed: () {
-                      if (formkey.currentState!.validate()) {
-                        print('valid email');
-                      }
+                      // if (formkey.currentState!.validate()) {
+                      //   print('valid email');
+                      // }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

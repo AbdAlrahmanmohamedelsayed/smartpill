@@ -46,8 +46,8 @@ class _SplashviewState extends State<Splashview> {
               delay: Duration(seconds: 1),
               child: Text(
                 'Smart Pill',
-                style: theme.textTheme.bodyLarge
-                    ?.copyWith(color: ColorPallets.redColor),
+                style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold, color: ColorPallets.redColor),
               ),
             )
           ],
