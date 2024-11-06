@@ -30,35 +30,30 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FadeInRight(
-                  delay: const Duration(microseconds: 550),
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 40),
-                    width: media.width,
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      'Login',
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: theme.primaryColor),
-                    ),
+                Container(
+                  padding: const EdgeInsets.only(top: 40),
+                  width: media.width,
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    'Login',
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: theme.primaryColor),
                   ),
                 ),
-                FadeInDown(
-                  delay: const Duration(microseconds: 400),
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: Image.asset('assets/images/Login.png')),
+                Container(
+                    alignment: Alignment.center,
+                    child: Image.asset('assets/images/Login.png')),
+                const SizedBox(
+                  height: 45,
                 ),
-                FadeInRight(
-                  delay: const Duration(microseconds: 550),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 9.0),
-                    child: Text(
-                      textAlign: TextAlign.start,
-                      'welcome back!',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 9.0),
+                  child: Text(
+                    textAlign: TextAlign.start,
+                    'welcome back!',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AppColor.textColorPrimary,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(
@@ -77,7 +72,7 @@ class _LoginViewState extends State<LoginView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redColor,
+                  cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(16),
@@ -123,7 +118,7 @@ class _LoginViewState extends State<LoginView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redColor,
+                  cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12),
@@ -208,66 +203,63 @@ class _LoginViewState extends State<LoginView> {
                     )
                   ],
                 ),
-                FadeInUp(
-                  delay: const Duration(milliseconds: 250),
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 20),
-                        backgroundColor: ColorPallets.redColor),
-                    onPressed: () {
-                      // if (formkey.currentState!.validate()) {
-                      //   print('valid email');
-                      // }
-
-                      if (users == 'admin') {
-                        Navigator.pushNamed(context, PageRoutesName.admin);
-                      } else {
-                        Navigator.pushNamed(context, PageRoutesName.layout);
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Login',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 22,
-                        )
-                      ],
-                    ),
-                  ),
+                const SizedBox(
+                  height: 20,
                 ),
-                FadeInRight(
-                  delay: const Duration(milliseconds: 450),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 20),
+                      backgroundColor: AppColor.primaryColor),
+                  onPressed: () {
+                    // if (formkey.currentState!.validate()) {
+                    //   print('valid email');
+                    // }
+
+                    if (users == 'admin') {
+                      Navigator.pushNamed(context, PageRoutesName.admin);
+                    } else {
+                      Navigator.pushNamed(context, PageRoutesName.layout);
+                    }
+                  },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Don\'t you have an account?',
-                        style: theme.textTheme.bodySmall,
+                        'Login',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, PageRoutesName.signup);
-                          },
-                          child: Text(
-                            'SignUp',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: ColorPallets.redColor),
-                          ))
+                      const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 22,
+                      )
                     ],
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Don\'t you have an account?',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, PageRoutesName.signup);
+                        },
+                        child: Text(
+                          'SignUp',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.primaryColor),
+                        ))
+                  ],
                 ),
               ],
             ),

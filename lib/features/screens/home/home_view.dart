@@ -27,14 +27,15 @@ class _HomeViewState extends State<HomeView> {
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 60, vertical: 50),
-                color: ColorPallets.primaryColor,
+                color: AppColor.primaryColor,
                 height: medi.size.height * .25,
                 width: medi.size.width,
                 alignment: Alignment.topLeft,
                 child: Text(
                   'Home',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: ColorPallets.Colowhite),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: AppColor.whiteColor,
+                  ),
                 ),
               ),
               Positioned(
@@ -68,17 +69,17 @@ class _HomeViewState extends State<HomeView> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           dayNumStyle: const TextStyle(
-                              color: ColorPallets.redColor,
+                              color: AppColor.primaryColor,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           monthStrStyle: const TextStyle(
-                              color: Colors.red,
+                              color: AppColor.primaryColor,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           dayStrStyle: const TextStyle(
-                              color: Colors.red,
+                              color: AppColor.primaryColor,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
@@ -91,17 +92,17 @@ class _HomeViewState extends State<HomeView> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           dayNumStyle: const TextStyle(
-                              color: ColorPallets.Colowhite,
+                              color: AppColor.whiteColor,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           monthStrStyle: const TextStyle(
-                              color: ColorPallets.Colowhite,
+                              color: AppColor.whiteColor,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),
                           dayStrStyle: const TextStyle(
-                              color: ColorPallets.Colowhite,
+                              color: AppColor.whiteColor,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Exo'),

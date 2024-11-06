@@ -57,7 +57,7 @@ class _SignupViewState extends State<SignupView> {
 
                     return null;
                   },
-                  cursorColor: ColorPallets.redColor,
+                  cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(16),
@@ -107,7 +107,7 @@ class _SignupViewState extends State<SignupView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redColor,
+                  cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(16),
@@ -153,7 +153,7 @@ class _SignupViewState extends State<SignupView> {
                     }
                     return null;
                   },
-                  cursorColor: ColorPallets.redColor,
+                  cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12),
@@ -238,37 +238,34 @@ class _SignupViewState extends State<SignupView> {
                     )
                   ],
                 ),
-                FadeInUp(
-                  delay: const Duration(milliseconds: 250),
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 20),
-                        backgroundColor: Colors.red),
-                    onPressed: () {
-                      // if (formkey.currentState!.validate()) {
-                      //   print('valid email');
-                      // }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Create Account',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 22,
-                        )
-                      ],
-                    ),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 20),
+                      backgroundColor: AppColor.buttonPrimary),
+                  onPressed: () {
+                    // if (formkey.currentState!.validate()) {
+                    //   print('valid email');
+                    // }
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Create Account',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 22,
+                      )
+                    ],
                   ),
                 ),
               ],
