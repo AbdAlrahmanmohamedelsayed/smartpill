@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smartpill/features/screens/home/home_view.dart';
-import 'package:smartpill/features/screens/settings/settings_view.dart';
+import 'package:smartpill/features/screens/menu/menu_view.dart';
 
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
@@ -11,7 +11,7 @@ class LayoutView extends StatefulWidget {
 
 class _LayoutViewState extends State<LayoutView> {
   int selectedIndex = 0;
-  List<Widget> screens = [HomeView(), SettingsView()];
+  List<Widget> screens = [HomeView(), MenuView()];
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +55,8 @@ class _LayoutViewState extends State<LayoutView> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Image.asset(width: 25, 'assets/images/icons/setting.png'),
-                label: 'Settings',
+                icon: Image.asset(width: 25, 'assets/images/icons/menu.png'),
+                label: 'More',
               ),
             ],
           ),

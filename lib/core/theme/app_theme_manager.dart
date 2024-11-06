@@ -16,6 +16,11 @@ class AppThemeManager {
       shape: StadiumBorder(side: BorderSide(width: 5, color: primary)),
     ),
     appBarTheme: AppBarTheme(
+        titleTextStyle: TextStyle(
+            color: primary,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Exo'),
         centerTitle: true,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: primary)),
@@ -32,7 +37,7 @@ class AppThemeManager {
           fontFamily: 'Exo'),
       bodyMedium: TextStyle(
           color: AppColor.textColorPrimary,
-          fontSize: 25,
+          fontSize: 22,
           fontWeight: FontWeight.w600,
           fontFamily: 'Exo'),
       bodySmall: TextStyle(
