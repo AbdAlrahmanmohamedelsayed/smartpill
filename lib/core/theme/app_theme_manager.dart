@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 
 class AppThemeManager {
-  static Color primary = ColorPallets.primaryColor;
+  static Color primary = AppColor.primaryColor;
   static ThemeData lightThemeManager = ThemeData(
     scaffoldBackgroundColor: Colors.white,
     primaryColor: primary,
@@ -26,17 +26,17 @@ class AppThemeManager {
           fontWeight: FontWeight.bold,
           fontFamily: 'Exo'),
       bodyLarge: TextStyle(
-          color: Colors.black,
+          color: AppColor.textColorPrimary,
           fontSize: 28,
           fontWeight: FontWeight.bold,
           fontFamily: 'Exo'),
       bodyMedium: TextStyle(
-          color: Colors.black,
+          color: AppColor.textColorPrimary,
           fontSize: 25,
           fontWeight: FontWeight.w600,
           fontFamily: 'Exo'),
       bodySmall: TextStyle(
-          color: Colors.black,
+          color: AppColor.textColorPrimary,
           fontSize: 17,
           fontWeight: FontWeight.w400,
           fontFamily: 'Exo'),
