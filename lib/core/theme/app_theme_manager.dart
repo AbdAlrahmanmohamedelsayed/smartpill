@@ -9,8 +9,7 @@ class AppThemeManager {
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       showUnselectedLabels: false,
       selectedItemColor: primary,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+      backgroundColor: AppColor.whiteColor,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       shape: StadiumBorder(side: BorderSide(width: 5, color: primary)),

@@ -87,7 +87,7 @@ class MenuView extends StatelessWidget {
               tittle: 'Check drug interaction',
             ),
             const SizedBox(
-              height: 20,
+              height: 15,
             ),
             Divider(
               height: 4,
@@ -95,7 +95,23 @@ class MenuView extends StatelessWidget {
               color: theme.primaryColor,
             ),
             const SizedBox(
-              height: 20,
+              height: 15,
+            ),
+            CustomListtile(
+              onTap: () {},
+              imagePath: 'assets/images/icons/smart-device.png',
+              tittle: 'connect device',
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Divider(
+              height: 4,
+              thickness: 2,
+              color: theme.primaryColor,
+            ),
+            const SizedBox(
+              height: 15,
             ),
             CustomListtile(
               onTap: () {
@@ -104,6 +120,31 @@ class MenuView extends StatelessWidget {
               imagePath: 'assets/images/icons/setting.png',
               tittle: 'Setting App',
             ),
+            const SizedBox(
+              height: 15,
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: const BorderSide(
+                            width: 3, color: AppColor.primaryColor)),
+                    backgroundColor: AppColor.whiteColor,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 22, vertical: 22)),
+                onPressed: () {},
+                child: Row(
+                  children: [
+                    Image.asset(width: 30, 'assets/images/icons/check-out.png'),
+                    const SizedBox(
+                      width: 22,
+                    ),
+                    Text(
+                      'Logout',
+                      style: theme.textTheme.bodyMedium,
+                    )
+                  ],
+                )),
           ],
         ),
       ),
