@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:smartpill/core/theme/color_pallets.dart';
 
 class OxygenView extends StatefulWidget {

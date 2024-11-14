@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/home/home_view.dart';
 import 'package:smartpill/features/screens/menu/menu_view.dart';
@@ -23,13 +24,15 @@ class _LayoutViewState extends State<LayoutView> {
       floatingActionButton: selectedIndex == 0
           ? FloatingActionButton(
               backgroundColor: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, PageRoutesName.addMedicine);
+              },
               child:
                   Image.asset('assets/images/icons/add_pills.png', width: 35),
             )
           : null,
       bottomNavigationBar: Container(
-        height: 90,
+        height: 100,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(

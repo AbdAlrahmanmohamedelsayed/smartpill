@@ -15,9 +15,9 @@ class _LoginViewState extends State<LoginView> {
   bool isObscure = true;
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontrolar = TextEditingController();
+  var formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    var formkey = GlobalKey<FormState>();
     var theme = Theme.of(context);
     var media = MediaQuery.sizeOf(context);
     return Scaffold(
