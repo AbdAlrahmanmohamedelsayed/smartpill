@@ -25,7 +25,7 @@ class _LayoutViewState extends State<LayoutView> {
           ? FloatingActionButton(
               backgroundColor: Colors.white,
               onPressed: () {
-                Navigator.pushNamed(context, PageRoutesName.addMedicine);
+                // Navigator.pushNamed(context, PageRoutesName.addMedicine);
               },
               child:
                   Image.asset('assets/images/icons/add_pills.png', width: 35),

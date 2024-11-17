@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:lottie/lottie.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 
-class OxygenView extends StatefulWidget {
-  const OxygenView({super.key});
+class TempretureView extends StatelessWidget {
+  const TempretureView({super.key});
 
-  @override
-  State<OxygenView> createState() => _OxygenViewState();
-}
-
-class _OxygenViewState extends State<OxygenView> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -22,7 +17,7 @@ class _OxygenViewState extends State<OxygenView> {
         toolbarHeight: 80,
         titleTextStyle: theme.appBarTheme.titleTextStyle
             ?.copyWith(color: AppColor.whiteColor),
-        title: const Text('Oxygen'),
+        title: const Text('Tempreture'),
         leading: const BackButton(
           color: AppColor.whiteColor,
         ),
@@ -33,7 +28,7 @@ class _OxygenViewState extends State<OxygenView> {
           children: [
             Text(
               maxLines: 2,
-              '1-Gently place your finger on the sensor so that it covers it completely.',
+              '1-Gently place your finger on the sensor Make sure your finger completely covers the sensor to ensure an accurate reading',
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(
@@ -41,7 +36,7 @@ class _OxygenViewState extends State<OxygenView> {
             ),
             Text(
               maxLines: 2,
-              '2-Stay still and do not move while measuring..',
+              '2-Stay still during measurement Avoid any movement during the process to get an accurate result.g..',
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(
@@ -62,7 +57,8 @@ class _OxygenViewState extends State<OxygenView> {
                       spreadRadius: 3,
                     ),
                   ]),
-              child: Image.asset(width: 260, 'assets/images/icons/oxygen.png'),
+              child:
+                  Lottie.asset(width: 400, 'assets/images/Lottie/temper.json'),
             ),
           ],
         ),

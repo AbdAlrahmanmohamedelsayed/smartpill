@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/menu/HealthMonitoring/Oxygen/Oxygen_view.dart';
+import 'package:smartpill/features/screens/menu/HealthMonitoring/Temperature/tempreture_view.dart';
 import 'package:smartpill/features/screens/widgets/card_health.dart';
 
 class HealthView extends StatefulWidget {
@@ -29,37 +31,35 @@ class _HealthViewState extends State<HealthView> {
           color: AppColor.whiteColor,
         ),
       ),
-      body: isSeletedOxygen == false
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Vital Signs Monitoring:',
-                      style: theme.textTheme.bodyMedium),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CardHealth(
-                      onTap: () {
-                        setState(() {
-                          isSeletedOxygen = !isSeletedOxygen;
-                        });
-                      },
-                      pathImage: 'assets/images/icons/oxygen-saturation.png',
-                      title: 'Oxygen ',
-                    ),
-                    CardHealth(
-                      onTap: () {},
-                      pathImage: 'assets/images/icons/temperature.png',
-                      title: 'Temperature ',
-                    ),
-                  ],
-                ),
-              ],
-            )
-          : OxygenView(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Vital Signs Monitoring:',
+                style: theme.textTheme.bodyMedium),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CardHealth(
+                onTap: () {
+                  Navigator.pushNamed(context, PageRoutesName.oxygenPage);
+                },
+                pathImage: 'assets/images/icons/oxygen-saturation.png',
+                title: 'Oxygen ',
+              ),
+              CardHealth(
+                onTap: () {
+                  Navigator.pushNamed(context, PageRoutesName.tempreturePage);
+                },
+                pathImage: 'assets/images/icons/temperature.png',
+                title: 'Temperature ',
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
