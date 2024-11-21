@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/home/home_view.dart';
 import 'package:smartpill/features/screens/menu/menu_view.dart';
-import 'package:smartpill/features/screens/notification/notifications.dart';
 import 'package:smartpill/features/screens/report/report_view.dart';
 
 class LayoutView extends StatefulWidget {
@@ -14,28 +14,25 @@ class LayoutView extends StatefulWidget {
 
 class _LayoutViewState extends State<LayoutView> {
   int selectedIndex = 0;
-  List<Widget> screens = [
-    HomeView(),
-    Notificationsview(),
-    ReportView(),
-    MenuView()
-  ];
+  List<Widget> screens = const [HomeView(), ReportView(), MenuView()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[selectedIndex],
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: selectedIndex == 0
           ? FloatingActionButton(
               backgroundColor: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, PageRoutesName.addMedicine);
+              },
               child:
                   Image.asset('assets/images/icons/add_pills.png', width: 35),
             )
           : null,
       bottomNavigationBar: Container(
-        height: 90,
+        height: 100,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -61,19 +58,14 @@ class _LayoutViewState extends State<LayoutView> {
               isSelected: selectedIndex == 0,
             ),
             _buildBottomNavigationBarItem(
-              iconPath: 'assets/images/icons/notif_pill.png',
-              label: 'Notification',
-              isSelected: selectedIndex == 1,
-            ),
-            _buildBottomNavigationBarItem(
               iconPath: 'assets/images/icons/medical-report.png',
               label: 'Medical Report',
-              isSelected: selectedIndex == 2,
+              isSelected: selectedIndex == 1,
             ),
             _buildBottomNavigationBarItem(
               iconPath: 'assets/images/icons/menu.png',
               label: 'More',
-              isSelected: selectedIndex == 3,
+              isSelected: selectedIndex == 2,
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
+// ignore: must_be_immutable
 class ThemeandLangView extends StatelessWidget {
   List<String> themeList = ['Light', 'Dark'];
   List<String> langList = ['English', 'عربي'];

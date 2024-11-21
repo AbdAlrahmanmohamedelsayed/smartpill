@@ -132,7 +132,7 @@ class MenuView extends StatelessWidget {
                     backgroundColor: AppColor.whiteColor,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 22, vertical: 22)),
-                onPressed: () {},
+                onPressed: () {Navigator.pushNamed(context, PageRoutesName.login);},
                 child: Row(
                   children: [
                     Image.asset(width: 30, 'assets/images/icons/check-out.png'),
