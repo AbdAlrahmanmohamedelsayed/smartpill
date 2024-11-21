@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
-import 'package:smartpill/features/screens/menu/HealthMonitoring/Oxygen/Oxygen_view.dart';
-import 'package:smartpill/features/screens/menu/HealthMonitoring/Temperature/tempreture_view.dart';
+
 import 'package:smartpill/features/screens/widgets/card_health.dart';
 
 class HealthView extends StatefulWidget {

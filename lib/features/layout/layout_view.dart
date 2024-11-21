@@ -20,12 +20,12 @@ class _LayoutViewState extends State<LayoutView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[selectedIndex],
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: selectedIndex == 0
           ? FloatingActionButton(
               backgroundColor: Colors.white,
               onPressed: () {
-                // Navigator.pushNamed(context, PageRoutesName.addMedicine);
+                Navigator.pushNamed(context, PageRoutesName.addMedicine);
               },
               child:
                   Image.asset('assets/images/icons/add_pills.png', width: 35),
