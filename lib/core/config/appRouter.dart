@@ -9,6 +9,7 @@ import 'package:smartpill/features/screens/menu/HealthMonitoring/health_view.dar
 import 'package:smartpill/features/screens/admin/admin_view.dart';
 import 'package:smartpill/features/screens/menu/chatTips/Chat_view.dart';
 import 'package:smartpill/features/screens/menu/drug_interaction/drug_interaction_view.dart';
+import 'package:smartpill/features/screens/menu/test/test_view.dart';
 import 'package:smartpill/features/screens/onboarding/onboarding_view.dart';
 import 'package:smartpill/features/screens/Auth/signup/signUp_view.dart';
 import 'package:smartpill/features/screens/menu/settings/setting_screens/theme_and_lang_view.dart';
@@ -60,6 +61,9 @@ class AppRouter {
       case PageRoutesName.tempreturePage:
         return MaterialPageRoute(
             builder: (context) => TempretureView(), settings: settings);
+      case PageRoutesName.testmm:
+        return MaterialPageRoute(
+            builder: (context) => TestView(), settings: settings);
       default:
         return MaterialPageRoute(
             builder: (context) => Splashview(), settings: settings);

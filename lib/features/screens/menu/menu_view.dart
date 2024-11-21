@@ -105,6 +105,16 @@ class MenuView extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
+            CustomListtile(
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutesName.testmm);
+              },
+              imagePath: 'assets/images/icons/smart-device.png',
+              tittle: 'Test Test',
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             Divider(
               height: 4,
               thickness: 2,
@@ -132,7 +142,9 @@ class MenuView extends StatelessWidget {
                     backgroundColor: AppColor.whiteColor,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 22, vertical: 22)),
-                onPressed: () {Navigator.pushNamed(context, PageRoutesName.login);},
+                onPressed: () {
+                  Navigator.pushNamed(context, PageRoutesName.login);
+                },
                 child: Row(
                   children: [
                     Image.asset(width: 30, 'assets/images/icons/check-out.png'),
