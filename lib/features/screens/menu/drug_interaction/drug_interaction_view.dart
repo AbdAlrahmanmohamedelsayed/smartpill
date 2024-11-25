@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/menu/drug_interaction/Service/api_service.dart';
+import 'package:smartpill/features/screens/menu/drug_interaction/widgets/buildDrugInputField.dart';
 import 'package:smartpill/features/screens/widgets/card_interAction.dart';
 import 'package:smartpill/model/drug_interaction.dart';
 
@@ -16,7 +17,7 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
   TextEditingController drug2Controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  Future<DrugInteraction?>? _interactionResult; // Future لتخزين نتيجة التفاعل
+  Future<DrugInteraction?>? _interactionResult;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
-                _buildDrugInputField(
+                Builddruginputfield(
                     controller: drug1Controller,
                     hintText: 'Enter the first medicine'),
                 const SizedBox(height: 20),
@@ -56,7 +57,7 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
-                _buildDrugInputField(
+                Builddruginputfield(
                     controller: drug2Controller,
                     hintText: 'Enter the second medicine'),
                 const SizedBox(height: 20),
@@ -83,46 +84,10 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildResultWidget(), // عرض النتيجة
+                _buildResultWidget(),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  _buildDrugInputField(
-      {required TextEditingController controller, required String hintText}) {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a drug name';
-        }
-        return null;
-      },
-      style: Theme.of(context).textTheme.bodySmall,
-      controller: controller,
-      cursorColor: Theme.of(context).primaryColor,
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.all(16),
-        suffixIcon: const Icon(
-          Icons.search,
-          color: AppColor.primaryColor,
-          size: 22,
-        ),
-        hintText: hintText,
-        hintStyle: Theme.of(context)
-            .textTheme
-            .bodySmall
-            ?.copyWith(color: AppColor.textColorHint),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColor.primaryColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColor.primaryColor),
         ),
       ),
     );
@@ -151,7 +116,7 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
           return const Center(
             child: Text(
               'No interaction found.',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.red),
             ),
           );
         } else {

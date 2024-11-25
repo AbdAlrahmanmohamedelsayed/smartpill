@@ -37,7 +37,7 @@ class AdminView extends StatelessWidget {
                     width: 40,
                   ),
                   Text(
-                    'Admin',
+                    'Doctor',
                     style: theme.textTheme.titleLarge,
                   )
                 ],
