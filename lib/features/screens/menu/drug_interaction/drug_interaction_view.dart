@@ -13,8 +13,8 @@ class DrugInteractionView extends StatefulWidget {
 }
 
 class _DrugInteractionViewState extends State<DrugInteractionView> {
-  TextEditingController drug1Controller = TextEditingController();
-  TextEditingController drug2Controller = TextEditingController();
+  final TextEditingController drug1Controller = TextEditingController();
+  final TextEditingController drug2Controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   Future<DrugInteraction?>? _interactionResult;
@@ -25,7 +25,8 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
     return Scaffold(
       appBar: AppBar(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(20))),
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),
+        ),
         backgroundColor: AppColor.primaryColor,
         toolbarHeight: 80,
         titleTextStyle: theme.appBarTheme.titleTextStyle
@@ -49,8 +50,9 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                 ),
                 const SizedBox(height: 8),
                 Builddruginputfield(
-                    controller: drug1Controller,
-                    hintText: 'Enter the first medicine'),
+                  controller: drug1Controller,
+                  hintText: 'Enter the first medicine',
+                ),
                 const SizedBox(height: 20),
                 Text(
                   'Enter Medication 2',
@@ -58,13 +60,15 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                 ),
                 const SizedBox(height: 8),
                 Builddruginputfield(
-                    controller: drug2Controller,
-                    hintText: 'Enter the second medicine'),
+                  controller: drug2Controller,
+                  hintText: 'Enter the second medicine',
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     backgroundColor: AppColor.accentGreen,
                   ),
                   onPressed: () {
@@ -93,10 +97,11 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
     );
   }
 
-  _buildResultWidget() {
+  Widget _buildResultWidget() {
     if (_interactionResult == null) {
       return const SizedBox();
     }
+
     return FutureBuilder<DrugInteraction?>(
       future: _interactionResult,
       builder:
@@ -105,13 +110,6 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
           return const Center(
             child: CircularProgressIndicator(color: AppColor.primaryColor),
           );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error: ${snapshot.error}',
-              style: const TextStyle(color: Colors.red),
-            ),
-          );
         } else if (!snapshot.hasData || snapshot.data == null) {
           return const Center(
             child: Text(
@@ -119,6 +117,14 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
               style: TextStyle(fontSize: 16, color: Colors.red),
             ),
           );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Error:${snapshot.error}',
+              style: TextStyle(color: Colors.red),
+            ),
+          );
+          print(snapshot.error);
         } else {
           final interaction = snapshot.data!;
           return CardInteractionView(
@@ -127,5 +133,12 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    drug1Controller.dispose();
+    drug2Controller.dispose();
+    super.dispose();
   }
 }
