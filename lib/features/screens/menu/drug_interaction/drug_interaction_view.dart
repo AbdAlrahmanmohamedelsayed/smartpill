@@ -49,7 +49,9 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
-                Builddruginputfield(
+                BuildDrugInputField(
+                  onSearch: (query) =>
+                      ApiServiceDruginteraction().searchDrugNames(query),
                   controller: drug1Controller,
                   hintText: 'Enter the first medicine',
                 ),
@@ -59,7 +61,9 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   style: theme.textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 8),
-                Builddruginputfield(
+                BuildDrugInputField(
+                  onSearch: (query) =>
+                      ApiServiceDruginteraction().searchDrugNames(query),
                   controller: drug2Controller,
                   hintText: 'Enter the second medicine',
                 ),
@@ -74,7 +78,8 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
-                        _interactionResult = ApiService().fetchDrugInteraction(
+                        _interactionResult =
+                            ApiServiceDruginteraction().fetchDrugInteraction(
                           drug1Controller.text.trim(),
                           drug2Controller.text.trim(),
                         );
@@ -110,7 +115,7 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
           return const Center(
             child: CircularProgressIndicator(color: AppColor.primaryColor),
           );
-        } else if (!snapshot.hasData || snapshot.data == null) {
+        } else if (!snapshot.hasData) {
           return const Center(
             child: Text(
               'No interaction found.',
@@ -120,11 +125,10 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
         } else if (snapshot.hasError) {
           return Center(
             child: Text(
-              'Error:${snapshot.error}',
-              style: TextStyle(color: Colors.red),
+              'Error: ${snapshot.error}',
+              style: const TextStyle(color: Colors.red),
             ),
           );
-          print(snapshot.error);
         } else {
           final interaction = snapshot.data!;
           return CardInteractionView(

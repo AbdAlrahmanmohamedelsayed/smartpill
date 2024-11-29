@@ -4,17 +4,16 @@ import 'package:dio/io.dart';
 import 'package:smartpill/features/screens/menu/drug_interaction/Service/Api_Constant.dart';
 import 'package:smartpill/model/drug_interaction.dart';
 
-class ApiService {
+class ApiServiceDruginteraction {
   final Dio _dio;
 
-  ApiService()
+  ApiServiceDruginteraction()
       : _dio = Dio(
           BaseOptions(
-            baseUrl: ApiConstant.baseUrl,
-            connectTimeout: const Duration(seconds: 20),
+            baseUrl: ApiConstantDrugInteraction.baseUrl,
+            connectTimeout: const Duration(seconds: 10),
           ),
         ) {
-    // Handle SSL issues if needed
     (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
@@ -27,7 +26,7 @@ class ApiService {
       String drug1, String drug2) async {
     try {
       final response = await _dio.get(
-        ApiConstant.getDrugInteractions,
+        ApiConstantDrugInteraction.getDrugInteractions,
         queryParameters: {
           'drug1': drug1,
           'drug2': drug2,
@@ -47,6 +46,39 @@ class ApiService {
     } catch (e) {
       print('Error fetching data: $e');
       rethrow;
+    }
+  }
+
+  Future<List<String>> searchDrugNames(String query) async {
+    try {
+      // Ensure query is not empty
+      if (query.isEmpty) {
+        return [];
+      }
+
+      final response = await _dio.get(
+        ApiConstantDrugInteraction.getDrugsearch,
+        queryParameters: {'query': query},
+      );
+
+      if (response.statusCode == 200) {
+        // Validate response data type
+        final data = response.data;
+        if (data is List) {
+          return data.cast<String>();
+        } else {
+          throw Exception(
+              'Unexpected response format: ${response.runtimeType}');
+        }
+      } else {
+        throw Exception(
+            'Failed to load search results: ${response.statusCode} ${response.statusMessage}');
+      }
+    } catch (e, stackTrace) {
+      // Log the error and stack trace for debugging
+      print('Error fetching drug names: $e');
+      print('StackTrace: $stackTrace');
+      rethrow; // Re-throw to propagate error
     }
   }
 }
