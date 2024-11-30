@@ -10,19 +10,28 @@ class ApiManagerAuth {
   ));
   Future<AuthResponce> login(String email, String password) async {
     try {
-      final responce = await _dio.post(
+      final response = await _dio.post(
         '/login',
         data: LoginRequest(email: email, password: password).toJson(),
       );
-
-      if (responce.statusCode == 200) {
-        return AuthResponce.fromJson(responce.data);
-      } else {
-        throw Exception(
-            'Failed to SignUp. Server responded with: ${responce.statusCode}');
+      if (response.statusCode == 200) {
+        return AuthResponce.fromJson(response.data);
       }
-    } catch (e) {
-      throw Exception('Failed to Login : $e');
+      else if(response.statusCode == 401){
+        throw Exception('Failed to Login.email or password is wrong');
+      }
+      else {
+        throw Exception(
+            'Failed to SignUp. Server responded with: ${response.statusCode}');
+      }
+    }on DioException catch (e) {
+      if(e.response?.statusCode == 401){
+        throw Exception('Failed to login: email or password is incorrect.');
+      }
+      else {
+        throw Exception(
+            'Failed to SignUp. Server responded with: ${e.response?.statusCode}');
+      }
     }
   }
 
