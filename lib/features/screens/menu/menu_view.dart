@@ -109,8 +109,8 @@ class MenuView extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, PageRoutesName.testmm);
               },
-              imagePath: 'assets/images/icons/smart-device.png',
-              tittle: 'Test Test',
+              imagePath: 'assets/images/icons/device_control.png',
+              tittle: 'device Control  ',
             ),
             const SizedBox(
               height: 15,
