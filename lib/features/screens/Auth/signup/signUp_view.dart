@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
+import 'package:smartpill/features/screens/Auth/service/api_Manager_Auth.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -12,9 +13,9 @@ class SignupView extends StatefulWidget {
 class _SignupViewState extends State<SignupView> {
   String? users;
   bool isObscure = true;
-  TextEditingController usernamecontrolar = TextEditingController();
-  TextEditingController emailcontroller = TextEditingController();
-  TextEditingController passwordcontrolar = TextEditingController();
+  TextEditingController _usernamecontrolar = TextEditingController();
+  TextEditingController _emailcontroller = TextEditingController();
+  TextEditingController _passwordcontrolar = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var formkey = GlobalKey<FormState>();
@@ -49,7 +50,7 @@ class _SignupViewState extends State<SignupView> {
                       )),
                 ),
                 TextFormField(
-                  controller: usernamecontrolar,
+                  controller: _usernamecontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return "plz enter your full name";
@@ -95,7 +96,7 @@ class _SignupViewState extends State<SignupView> {
                   height: 20,
                 ),
                 TextFormField(
-                  controller: emailcontroller,
+                  controller: _emailcontroller,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return "plz enter your emaail";
@@ -146,7 +147,7 @@ class _SignupViewState extends State<SignupView> {
                 ),
                 TextFormField(
                   obscureText: isObscure,
-                  controller: passwordcontrolar,
+                  controller: _passwordcontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Plz enter your password';
@@ -222,7 +223,7 @@ class _SignupViewState extends State<SignupView> {
                       children: [
                         Radio(
                             activeColor: theme.primaryColor,
-                            value: 'admin',
+                            value: 'doctor',
                             groupValue: users,
                             onChanged: (val) {
                               setState(() {
@@ -230,7 +231,7 @@ class _SignupViewState extends State<SignupView> {
                               });
                             }),
                         Text(
-                          'Admin',
+                          'Doctor',
                           style: theme.textTheme.bodyMedium
                               ?.copyWith(color: theme.primaryColor),
                         ),
@@ -246,9 +247,9 @@ class _SignupViewState extends State<SignupView> {
                           horizontal: 30, vertical: 20),
                       backgroundColor: AppColor.buttonPrimary),
                   onPressed: () {
-                    // if (formkey.currentState!.validate()) {
-                    //   print('valid email');
-                    // }
+                    if (formkey.currentState!.validate()) {
+                      _Signup();
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,5 +275,34 @@ class _SignupViewState extends State<SignupView> {
         ),
       ),
     );
+  }
+
+  void _Signup() async {
+    final username = _usernamecontrolar.text.trim();
+    final email = _emailcontroller.text.trim();
+    final password = _passwordcontrolar.text.trim();
+    final role = users;
+    try {
+      final response =
+          await ApiManagerAuth().SignUp(username, email, password, role!);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Sign-up successful!",
+            style: TextStyle(
+                fontSize: 22,
+                color: AppColor.accentGreen,
+                fontWeight: FontWeight.w600),
+          ),
+        ),
+      );
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
   }
 }

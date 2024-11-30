@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
+import 'package:smartpill/features/screens/Auth/service/api_Manager_Auth.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -12,8 +13,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   String? users;
   bool isObscure = true;
-  TextEditingController emailcontroller = TextEditingController();
-  TextEditingController passwordcontrolar = TextEditingController();
+  TextEditingController _emailcontroller = TextEditingController();
+  TextEditingController _passwordcontrolar = TextEditingController();
   var formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _LoginViewState extends State<LoginView> {
                   height: 20,
                 ),
                 TextFormField(
-                  controller: emailcontroller,
+                  controller: _emailcontroller,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return "plz enter your emaail";
@@ -110,7 +111,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 TextFormField(
                   obscureText: isObscure,
-                  controller: passwordcontrolar,
+                  controller: _passwordcontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Plz enter your password';
@@ -160,48 +161,49 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      children: [
-                        Radio(
-                          activeColor: theme.primaryColor,
-                          value: 'user',
-                          groupValue: users,
-                          onChanged: (val) {
-                            setState(() {
-                              users = val;
-                            });
-                          },
-                        ),
-                        Text(
-                          'User',
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.primaryColor),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio(
-                            activeColor: theme.primaryColor,
-                            value: 'admin',
-                            groupValue: users,
-                            onChanged: (val) {
-                              setState(() {
-                                users = val;
-                              });
-                            }),
-                        Text(
-                          'Admin',
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.primaryColor),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     Row(
+                //       children: [
+                //         Radio(
+                //           activeColor: theme.primaryColor,
+                //           value: 'user',
+                //           groupValue: users,
+                //           onChanged: (val) {
+                //             setState(() {
+                //               users = val;
+                //             });
+                //           },
+                //         ),
+                //         Text(
+                //           'User',
+                //           style: theme.textTheme.bodyMedium
+                //               ?.copyWith(color: theme.primaryColor),
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         Radio(
+                //             activeColor: theme.primaryColor,
+                //             value: 'admin',
+                //             groupValue: users,
+                //             onChanged: (val) {
+                //               setState(() {
+                //                 users = val;
+                //               });
+                //             }),
+                //         Text(
+                //           'Admin',
+                //           style: theme.textTheme.bodyMedium
+                //               ?.copyWith(color: theme.primaryColor),
+                //         ),
+                //       ],
+                //     )
+                //   ],
+                // ),
+
                 const SizedBox(
                   height: 20,
                 ),
@@ -213,15 +215,15 @@ class _LoginViewState extends State<LoginView> {
                           horizontal: 30, vertical: 20),
                       backgroundColor: AppColor.primaryColor),
                   onPressed: () {
-                    // if (formkey.currentState!.validate()) {
-                    //   print('valid email');
-                    // }
-
-                    if (users == 'admin') {
-                      Navigator.pushNamed(context, PageRoutesName.admin);
-                    } else {
-                      Navigator.pushNamed(context, PageRoutesName.layout);
+                    if (formkey.currentState!.validate()) {
+                      _Login();
                     }
+
+                    // if (users == 'admin') {
+                    //   Navigator.pushNamed(context, PageRoutesName.admin);
+                    // } else {
+                    //   Navigator.pushNamed(context, PageRoutesName.layout);
+                    // }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -266,5 +268,37 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  void _Login() async {
+    final email = _emailcontroller.text.trim();
+    final password = _passwordcontrolar.text.trim();
+    try {
+      final response = await ApiManagerAuth().login(email, password);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+              'Login Successful! 🎉',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: AppColor.accentGold),
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3)),
+      );
+      if (response.token != null) {
+        Navigator.pushNamed(context, PageRoutesName.layout);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+          'Error: $e',
+          style: const TextStyle(color: Colors.red),
+        )),
+      );
+    }
   }
 }
