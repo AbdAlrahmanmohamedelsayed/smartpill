@@ -7,7 +7,7 @@ class TestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    // var theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,7 +77,7 @@ class TestView extends StatelessWidget {
                         horizontal: 20, vertical: 22),
                   ),
                   onPressed: () =>
-                      _sendRequest('http://192.168.4.1/ReloadWithSenso'),
+                      _sendRequest('http:// 192.168.4.1/ReloadWithSensor'),
                   child: Column(
                     children: [
                       Image.asset(

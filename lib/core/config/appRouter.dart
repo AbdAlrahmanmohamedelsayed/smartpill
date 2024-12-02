@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/features/layout/layout_view.dart';
+import 'package:smartpill/features/screens/Auth/forgotPass/Forget_View.dart';
 import 'package:smartpill/features/screens/Auth/log/Login_view.dart';
 import 'package:smartpill/features/screens/add_pill_reminder/addMedicine_view.dart';
 import 'package:smartpill/features/screens/menu/HealthMonitoring/Oxygen/Oxygen_view.dart';
@@ -31,6 +32,9 @@ class AppRouter {
       case PageRoutesName.signup:
         return MaterialPageRoute(
             builder: (context) => SignupView(), settings: settings);
+      case PageRoutesName.forgetPass:
+        return MaterialPageRoute(
+            builder: (context) => ForgetView(), settings: settings);
       case PageRoutesName.layout:
         return MaterialPageRoute(
             builder: (context) => LayoutView(), settings: settings);

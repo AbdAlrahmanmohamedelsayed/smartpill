@@ -5,6 +5,7 @@ class PageRoutesName {
   static const String home = 'home';
   static const String login = 'login';
   static const String signup = 'signup';
+  static const String forgetPass = 'forgetPass';
   static const String admin = 'admin';
   static const String themeapp = 'themeandsetting';
   static const String healthMonitoring = 'HealthMonitoring';

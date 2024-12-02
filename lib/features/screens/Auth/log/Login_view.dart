@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
@@ -13,8 +15,10 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   String? users;
   bool isObscure = true;
+  // bool isLoading = false;
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _passwordcontrolar = TextEditingController();
+
   var formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -203,7 +207,16 @@ class _LoginViewState extends State<LoginView> {
                 //     )
                 //   ],
                 // ),
-
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, PageRoutesName.forgetPass);
+                  },
+                  child: Text(
+                    'forgot password?',
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: theme.primaryColor),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -270,9 +283,11 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   void _Login() async {
     final email = _emailcontroller.text.trim();
     final password = _passwordcontrolar.text.trim();
+
     try {
       final response = await ApiManagerAuth().login(email, password);
 
@@ -285,19 +300,23 @@ class _LoginViewState extends State<LoginView> {
                   fontWeight: FontWeight.w700,
                   color: AppColor.accentGold),
             ),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3)),
+            backgroundColor: AppColor.accentGreen,
+            duration: Duration(milliseconds: 300)),
       );
       if (response.token != null) {
+        await Future.delayed(const Duration(milliseconds: 700));
         Navigator.pushNamed(context, PageRoutesName.layout);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+            backgroundColor: Colors.grey,
             content: Text(
-          'Error: $e',
-          style: const TextStyle(color: Colors.red),
-        )),
+              'Error: $e',
+              style: const TextStyle(
+                color: AppColor.errorColor,
+              ),
+            )),
       );
     }
   }
