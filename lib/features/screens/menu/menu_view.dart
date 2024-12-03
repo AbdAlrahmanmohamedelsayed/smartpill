@@ -98,7 +98,9 @@ class MenuView extends StatelessWidget {
               height: 15,
             ),
             CustomListtile(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutesName.connectdivice);
+              },
               imagePath: 'assets/images/icons/smart-device.png',
               tittle: 'connect device',
             ),

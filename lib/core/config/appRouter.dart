@@ -9,6 +9,7 @@ import 'package:smartpill/features/screens/menu/HealthMonitoring/Temperature/tem
 import 'package:smartpill/features/screens/menu/HealthMonitoring/health_view.dart';
 import 'package:smartpill/features/screens/admin/admin_view.dart';
 import 'package:smartpill/features/screens/menu/chatTips/Chat_view.dart';
+import 'package:smartpill/features/screens/menu/connect_device/conect_device.dart';
 import 'package:smartpill/features/screens/menu/drug_interaction/drug_interaction_view.dart';
 import 'package:smartpill/features/screens/menu/device%20control/device%20control.dart';
 import 'package:smartpill/features/screens/onboarding/onboarding_view.dart';
@@ -53,6 +54,9 @@ class AppRouter {
       case PageRoutesName.chatTips:
         return MaterialPageRoute(
             builder: (context) => ChatView(), settings: settings);
+      case PageRoutesName.connectdivice:
+        return MaterialPageRoute(
+            builder: (context) => ConectDevice(), settings: settings);
       case PageRoutesName.addMedicine:
         return MaterialPageRoute(
             builder: (context) => AddmedicineView(), settings: settings);

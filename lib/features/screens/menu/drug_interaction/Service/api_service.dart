@@ -40,7 +40,6 @@ class ApiServiceDruginteraction {
             'Failed to load data: ${response.statusCode} ${response.statusMessage}');
       }
     } on DioException catch (dioError) {
-      // Log and rethrow Dio-specific errors for debugging
       print('Dio error: ${dioError.message}');
       rethrow;
     } catch (e) {
@@ -51,7 +50,6 @@ class ApiServiceDruginteraction {
 
   Future<List<String>> searchDrugNames(String query) async {
     try {
-      // Ensure query is not empty
       if (query.isEmpty) {
         return [];
       }
@@ -62,7 +60,6 @@ class ApiServiceDruginteraction {
       );
 
       if (response.statusCode == 200) {
-        // Validate response data type
         final data = response.data;
         if (data is List) {
           return data.cast<String>();

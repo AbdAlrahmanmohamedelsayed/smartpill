@@ -119,7 +119,10 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
           return const Center(
             child: Text(
               'No interaction found.',
-              style: TextStyle(fontSize: 16, color: Colors.red),
+              style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.accentGreen),
             ),
           );
         } else if (snapshot.hasError) {

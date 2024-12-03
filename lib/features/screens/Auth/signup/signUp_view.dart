@@ -53,7 +53,7 @@ class _SignupViewState extends State<SignupView> {
                   controller: _usernamecontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "plz enter your full name";
+                      return "please enter your full name";
                     }
 
                     return null;
@@ -99,7 +99,7 @@ class _SignupViewState extends State<SignupView> {
                   controller: _emailcontroller,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "plz enter your emaail";
+                      return "please enter your emaail";
                     }
                     var regexp = RegExp(
                         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
@@ -285,20 +285,34 @@ class _SignupViewState extends State<SignupView> {
     try {
       final response =
           await ApiManagerAuth().SignUp(username, email, password, role!);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Sign-up successful!",
-            style: TextStyle(
-                fontSize: 22,
-                color: AppColor.accentGreen,
-                fontWeight: FontWeight.w600),
+      if (response.token != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: AppColor.whiteColor,
+            content: Text(
+              "Sign-up successful!",
+              style: TextStyle(
+                  fontSize: 22,
+                  color: AppColor.accentGreen,
+                  fontWeight: FontWeight.w600),
+            ),
           ),
-        ),
-      );
+        );
 
-      Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              backgroundColor: AppColor.whiteColor,
+              content: Text(
+                'Sign Up failed',
+                style: TextStyle(
+                    fontSize: 22,
+                    color: AppColor.errorColor,
+                    fontWeight: FontWeight.w600),
+              )),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),

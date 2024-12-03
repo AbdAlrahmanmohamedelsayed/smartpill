@@ -19,7 +19,7 @@ class CardInteractionView extends StatelessWidget {
       height: meia.size.height * .4,
       width: meia.size.width * 0.30,
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.accentGreen, width: 3),
+        border: Border.all(color: AppColor.errorColor, width: 3),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -32,7 +32,11 @@ class CardInteractionView extends StatelessWidget {
                   maxLines: 2,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: AppColor.textColorPrimary)),
-              Image.asset(width: 70, 'assets/images/icons/versus.png'),
+              SizedBox(
+                width: 50,
+                child:
+                    Image.asset(width: 50, 'assets/images/icons/exchange.png'),
+              ),
               Text(interactiondat.drug2,
                   maxLines: 2,
                   style: theme.textTheme.bodyMedium
@@ -40,11 +44,15 @@ class CardInteractionView extends StatelessWidget {
             ],
           ),
           Text(interactiondat.interactionType,
-              style: theme.textTheme.bodyMedium),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppColor.errorColor,
+              )),
           Text(
             maxLines: 2,
             interactiondat.effect,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppColor.errorColor,
+            ),
           )
         ],
       ),

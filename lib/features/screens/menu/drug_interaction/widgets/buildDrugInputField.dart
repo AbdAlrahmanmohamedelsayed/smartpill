@@ -111,9 +111,7 @@ class _BuildDrugInputFieldState extends State<BuildDrugInputField> {
     try {
       final results = await widget.onSearch(query);
       setState(() {
-        suggestions = results.isNotEmpty
-            ? results
-            : []; // Ensure empty list if no results
+        suggestions = results.isNotEmpty ? results : [];
       });
     } catch (e) {
       print('Error fetching suggestions: $e');

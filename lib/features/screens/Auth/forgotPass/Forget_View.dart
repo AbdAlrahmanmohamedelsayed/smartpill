@@ -57,7 +57,7 @@ class _ForgetViewState extends State<ForgetView> {
               controller: _emailcontroller,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return "plz enter your emaail";
+                  return "please enter your emaail";
                 }
                 var regexp = RegExp(
                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');

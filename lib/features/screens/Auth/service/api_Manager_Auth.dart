@@ -16,19 +16,16 @@ class ApiManagerAuth {
       );
       if (response.statusCode == 200) {
         return AuthResponce.fromJson(response.data);
-      }
-      else if(response.statusCode == 401){
+      } else if (response.statusCode == 401) {
         throw Exception('Failed to Login.email or password is wrong');
-      }
-      else {
+      } else {
         throw Exception(
             'Failed to SignUp. Server responded with: ${response.statusCode}');
       }
-    }on DioException catch (e) {
-      if(e.response?.statusCode == 401){
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
         throw Exception('Failed to login: email or password is incorrect.');
-      }
-      else {
+      } else {
         throw Exception(
             'Failed to SignUp. Server responded with: ${e.response?.statusCode}');
       }
@@ -47,8 +44,7 @@ class ApiManagerAuth {
       if (responce.statusCode == 200 || responce.statusCode == 201) {
         return AuthResponce.fromJson(responce.data);
       } else {
-        throw Exception(
-            'Failed to SignUp. Server responded with: ${responce.statusCode}');
+        throw Exception('Failed to SignUp. : '); //${responce.statusCode}
       }
     } catch (e) {
       throw Exception('Falied to SignUp : $e');

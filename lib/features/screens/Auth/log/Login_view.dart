@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
                   controller: _emailcontroller,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "plz enter your emaail";
+                      return "please enter your emaail";
                     }
                     var regexp = RegExp(
                         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
@@ -118,7 +118,7 @@ class _LoginViewState extends State<LoginView> {
                   controller: _passwordcontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Plz enter your password';
+                      return 'please enter your password';
                     }
                     return null;
                   },
@@ -231,12 +231,6 @@ class _LoginViewState extends State<LoginView> {
                     if (formkey.currentState!.validate()) {
                       _Login();
                     }
-
-                    // if (users == 'admin') {
-                    //   Navigator.pushNamed(context, PageRoutesName.admin);
-                    // } else {
-                    //   Navigator.pushNamed(context, PageRoutesName.layout);
-                    // }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -301,19 +295,19 @@ class _LoginViewState extends State<LoginView> {
                   color: AppColor.accentGold),
             ),
             backgroundColor: AppColor.accentGreen,
-            duration: Duration(milliseconds: 300)),
+            duration: Duration(seconds: 1)),
       );
       if (response.token != null) {
-        await Future.delayed(const Duration(milliseconds: 700));
+        await Future.delayed(const Duration(seconds: 2));
         Navigator.pushNamed(context, PageRoutesName.layout);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: Colors.grey,
+        const SnackBar(
+            backgroundColor: Colors.white,
             content: Text(
-              'Error: $e',
-              style: const TextStyle(
+              ' Failed to login: email or password is incorrect',
+              style: TextStyle(
                 color: AppColor.errorColor,
               ),
             )),
