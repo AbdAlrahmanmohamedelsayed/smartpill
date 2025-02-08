@@ -315,7 +315,14 @@ class _SignupViewState extends State<SignupView> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(
+            content: Text(
+          'Falied to SignUp',
+          style: TextStyle(
+              fontSize: 22,
+              color: AppColor.errorColor,
+              fontWeight: FontWeight.w600),
+        )), // Error: $e
       );
     }
   }

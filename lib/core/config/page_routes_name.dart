@@ -17,4 +17,5 @@ class PageRoutesName {
   static const String oxygenPage = 'oxygenPage';
   static const String tempreturePage = 'tempreturePage';
   static const String testmm = 'testmm';
+  static const String configDevice = 'configuration device';
 }

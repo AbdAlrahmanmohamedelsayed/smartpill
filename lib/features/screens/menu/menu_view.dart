@@ -117,6 +117,16 @@ class MenuView extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
+            CustomListtile(
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutesName.configDevice);
+              },
+              imagePath: 'assets/images/icons/configuration_device.png',
+              tittle: 'configuration device',
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             Divider(
               height: 4,
               thickness: 2,

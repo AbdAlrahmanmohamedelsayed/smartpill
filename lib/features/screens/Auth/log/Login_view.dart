@@ -228,9 +228,10 @@ class _LoginViewState extends State<LoginView> {
                           horizontal: 30, vertical: 20),
                       backgroundColor: AppColor.primaryColor),
                   onPressed: () {
-                    if (formkey.currentState!.validate()) {
-                      _Login();
-                    }
+                    // if (formkey.currentState!.validate()) {
+                    //   _Login();
+                    // }
+                    Navigator.pushNamed(context, PageRoutesName.layout);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
