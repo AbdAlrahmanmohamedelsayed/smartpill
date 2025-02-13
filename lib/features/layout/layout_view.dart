@@ -5,6 +5,9 @@ import 'package:smartpill/features/screens/home/home_view.dart';
 import 'package:smartpill/features/screens/menu/menu_view.dart';
 import 'package:smartpill/features/screens/report/report_view.dart';
 
+import '../../model/PillReminder.dart';
+import '../screens/add_pill_reminder/addMedicine_view.dart';
+
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
 
@@ -14,18 +17,39 @@ class LayoutView extends StatefulWidget {
 
 class _LayoutViewState extends State<LayoutView> {
   int selectedIndex = 0;
-  List<Widget> screens = const [HomeView(), ReportView(), MenuView()];
+  List<Widget> screens = [HomeView(onSave: (PillReminder ) {  }, pillReminders: [],), const ReportView(), const MenuView()];
+  List<PillReminder> _pillReminders = [];
 
+  void _addPillReminder(PillReminder pillReminder) {
+    setState(() {
+      _pillReminders.add(pillReminder);
+    });
+    print("✅ Pill added: ${pillReminder.name}, Total: ${_pillReminders.length}");
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[selectedIndex],
+      body:IndexedStack(
+        index: selectedIndex,
+        children: [
+          HomeView( pillReminders: _pillReminders,onSave: _addPillReminder,), //Pass onSave to HomeView
+          ReportView(),
+          MenuView(),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: selectedIndex == 0
           ? FloatingActionButton(
               backgroundColor: Colors.white,
               onPressed: () {
-                Navigator.pushNamed(context, PageRoutesName.addMedicine);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => AddmedicineView(
+                  onSave:_addPillReminder
+                    ),
+                ),
+                );
               },
               child:
                   Image.asset('assets/images/icons/add_pills.png', width: 35),

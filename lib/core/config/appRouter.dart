@@ -21,7 +21,7 @@ class AppRouter {
     switch (settings.name) {
       case PageRoutesName.initial:
         return MaterialPageRoute(
-            builder: (context) => Splashview(), settings: settings);
+            builder: (context) => LayoutView(), settings: settings);
       case PageRoutesName.onboarding:
         return MaterialPageRoute(
             builder: (context) => OnboardingView(), settings: settings);
@@ -51,7 +51,7 @@ class AppRouter {
             builder: (context) => ChatView(), settings: settings);
       case PageRoutesName.addMedicine:
         return MaterialPageRoute(
-            builder: (context) => AddmedicineView(), settings: settings);
+            builder: (context) => AddmedicineView(onSave: (pill){},), settings: settings);
       case PageRoutesName.settingView:
         return MaterialPageRoute(
             builder: (context) => SettingsView(), settings: settings);

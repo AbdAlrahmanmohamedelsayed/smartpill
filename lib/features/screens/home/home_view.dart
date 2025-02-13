@@ -1,18 +1,24 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
+import 'package:smartpill/features/screens/add_pill_reminder/addMedicine_view.dart';
+
+import '../../../model/PillReminder.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final List<PillReminder> pillReminders;
+  final Function(PillReminder) onSave;
+
+  const HomeView({super.key, required this.onSave, required this.pillReminders});
 
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  final EasyInfiniteDateTimelineController _controller =
-      EasyInfiniteDateTimelineController();
+  final EasyInfiniteDateTimelineController _controller = EasyInfiniteDateTimelineController();
   var _focusDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     var medi = MediaQuery.of(context);
@@ -135,6 +141,43 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
         ),
+          // **Pill Reminder List**
+          Expanded(
+          child: widget.pillReminders.isEmpty
+    ? const Center(
+    child: Text(
+    'No pills added yet.',
+    style: TextStyle(fontSize: 16, color: Colors.grey),
+    ),
+    )
+        : ListView.builder(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    itemCount: widget.pillReminders.length,
+    itemBuilder: (context, index) {
+    final reminder = widget.pillReminders[index];
+    return Card(
+    margin:
+    const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10)),
+    elevation: 3,
+    child:SizedBox(
+      height: 100,
+      child: ListTile(
+    title: Text(
+    reminder.name,
+    style: const TextStyle(
+    fontSize: 16, fontWeight: FontWeight.bold),
+    ),
+    subtitle: Text(
+    'Dosage: ${reminder.dosage} | Amount: ${reminder.amount} | Time: ${reminder.time.format(context)}',
+    style: const TextStyle(fontSize: 14),
+    ),
+    ),
+    ),
+    );
+    },
+    ),)
       ],
     );
   }
