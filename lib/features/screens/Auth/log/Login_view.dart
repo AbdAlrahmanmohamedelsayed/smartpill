@@ -289,7 +289,7 @@ class _LoginViewState extends State<LoginView> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
-              'Login Successful! 🎉',
+              'Login Successful! ',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,

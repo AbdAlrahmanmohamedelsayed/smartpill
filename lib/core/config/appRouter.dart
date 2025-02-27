@@ -3,7 +3,7 @@ import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/features/layout/layout_view.dart';
 import 'package:smartpill/features/screens/Auth/forgotPass/Forget_View.dart';
 import 'package:smartpill/features/screens/Auth/log/Login_view.dart';
-import 'package:smartpill/features/screens/add_pill_reminder/addMedicine_view.dart';
+import 'package:smartpill/features/screens/add_pill_reminder/presentation/ui/addMedicine_view.dart';
 import 'package:smartpill/features/screens/menu/HealthMonitoring/Oxygen/Oxygen_view.dart';
 import 'package:smartpill/features/screens/menu/HealthMonitoring/Temperature/tempreture_view.dart';
 import 'package:smartpill/features/screens/menu/HealthMonitoring/health_view.dart';
@@ -60,7 +60,7 @@ class AppRouter {
             builder: (context) => ConectDevice(), settings: settings);
       case PageRoutesName.addMedicine:
         return MaterialPageRoute(
-            builder: (context) => AddmedicineView(), settings: settings);
+            builder: (context) => AddMedicineView(), settings: settings);
       case PageRoutesName.settingView:
         return MaterialPageRoute(
             builder: (context) => SettingsView(), settings: settings);

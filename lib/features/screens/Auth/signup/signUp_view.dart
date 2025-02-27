@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/Auth/service/api_Manager_Auth.dart';
+import 'package:smartpill/model/signUp.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -284,7 +285,7 @@ class _SignupViewState extends State<SignupView> {
     final role = users;
     try {
       final response =
-          await ApiManagerAuth().SignUp(username, email, password, role!);
+          await ApiManagerAuth().signUp(username, email, password, role!);
       if (response.token != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
