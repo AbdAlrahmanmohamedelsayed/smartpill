@@ -94,6 +94,10 @@ class MenuView extends StatelessWidget {
               thickness: 2,
               color: theme.primaryColor,
             ),
+            Text(
+              'Device',
+              style: theme.textTheme.bodyLarge,
+            ),
             const SizedBox(
               height: 15,
             ),

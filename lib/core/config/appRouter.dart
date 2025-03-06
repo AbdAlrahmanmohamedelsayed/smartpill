@@ -57,7 +57,7 @@ class AppRouter {
             builder: (context) => ChatView(), settings: settings);
       case PageRoutesName.connectdivice:
         return MaterialPageRoute(
-            builder: (context) => ConectDevice(), settings: settings);
+            builder: (context) => ConnectDevice(), settings: settings);
       case PageRoutesName.addMedicine:
         return MaterialPageRoute(
             builder: (context) => AddMedicineView(), settings: settings);
