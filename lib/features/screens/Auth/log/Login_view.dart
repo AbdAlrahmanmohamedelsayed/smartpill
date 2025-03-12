@@ -228,10 +228,10 @@ class _LoginViewState extends State<LoginView> {
                           horizontal: 30, vertical: 20),
                       backgroundColor: AppColor.primaryColor),
                   onPressed: () {
-                    // if (formkey.currentState!.validate()) {
-                    //   _Login();
-                    // }
-                    Navigator.pushNamed(context, PageRoutesName.layout);
+                    if (formkey.currentState!.validate()) {
+                      _Login();
+                    }
+                    // Navigator.pushNamed(context, PageRoutesName.layout);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,14 +288,16 @@ class _LoginViewState extends State<LoginView> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-              'Login Successful! ',
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColor.accentGold),
+            content: Center(
+              child: Text(
+                'Login Successful! ',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: AppColor.accentGreen),
+              ),
             ),
-            backgroundColor: AppColor.accentGreen,
+            backgroundColor: AppColor.whiteColor,
             duration: Duration(seconds: 1)),
       );
       if (response.token != null) {

@@ -7,30 +7,31 @@ import 'package:smartpill/model/Login.dart';
 import 'package:smartpill/utils/token_manager.dart';
 
 class ApiManagerAuth {
-  // late final Dio _dio;
+  late final Dio _dio;
 
-  // ApiManagerAuth() {
-  //   _dio = Dio(
-  //     BaseOptions(
-  //       baseUrl: "http://localhost:5238/api/Accounts/",
-  //       connectTimeout: const Duration(seconds: 10),
-  //       receiveTimeout: const Duration(seconds: 10),
-  //     ),
-  //   );
+  ApiManagerAuth() {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: "http://10.0.2.2:5238/api/Accounts", // Changed from localhost
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+      ),
+    );
 
-  //   (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
-  //       (HttpClient client) {
-  //     client.badCertificateCallback =
-  //         (X509Certificate cert, String host, int port) => true;
-  //     return client;
-  //   };
-  // }
+    // Configure certificate handling for development
+    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+  }
 
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: "http://loginregister.runasp.net/api/Account",
-    connectTimeout: const Duration(seconds: 10),
-    receiveTimeout: const Duration(seconds: 20),
-  ));
+  // final Dio _dio = Dio(BaseOptions(
+  //   baseUrl: "http://loginregister.runasp.net/api/Account",
+  //   connectTimeout: const Duration(seconds: 10),
+  //   receiveTimeout: const Duration(seconds: 20),
+  // ));
 
   Future<AuthResponce> login(String email, String password) async {
     try {

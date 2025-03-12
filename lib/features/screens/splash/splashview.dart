@@ -16,12 +16,14 @@ class _SplashviewState extends State<Splashview> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacementNamed(context, PageRoutesName.onboarding);
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   Navigator.pushReplacementNamed(context, PageRoutesName.onboarding);
+    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigateToNextScreen();
     });
   }
 
-  // _navigateToNextScreen();
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -61,25 +63,37 @@ class _SplashviewState extends State<Splashview> {
 
   Future<void> _navigateToNextScreen() async {
     try {
+      print("Starting navigation delay");
       await Future.delayed(const Duration(seconds: 2));
+      print("Delay completed");
 
-      if (!mounted) return;
+      if (!mounted) {
+        print("Widget not mounted after delay");
+        return;
+      }
 
+      print("Getting token");
       final tokenData = await TokenManager.getToken();
       final token = tokenData['token'];
 
-      print("Extracted token: $token");
+      print("Token retrieved: ${token != null ? 'Yes' : 'No'}");
 
-      if (!mounted) return;
+      if (!mounted) {
+        print("Widget not mounted after token retrieval");
+        return;
+      }
 
       if (token != null && token.isNotEmpty) {
-        Navigator.pushReplacementNamed(context, PageRoutesName.home);
+        print("Navigating to home");
+        Navigator.pushNamed(context, PageRoutesName.layout);
       } else {
+        print("Navigating to onboarding");
         Navigator.pushReplacementNamed(context, PageRoutesName.onboarding);
       }
     } catch (e) {
       print('Error in navigation: $e');
       if (mounted) {
+        print("Navigating to onboarding due to error");
         Navigator.pushReplacementNamed(context, PageRoutesName.onboarding);
       }
     }

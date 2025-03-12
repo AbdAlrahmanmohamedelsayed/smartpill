@@ -50,18 +50,21 @@ class _ChatViewState extends State<ChatView> {
         toolbarHeight: 80,
         titleTextStyle: theme.appBarTheme.titleTextStyle
             ?.copyWith(color: AppColor.whiteColor),
-        title: const Text('Chat Tips'),
+        title: const Text(' Tips'),
         leading: const BackButton(
           color: AppColor.whiteColor,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildMainContent(),
-          ),
-          _buildInputField(),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: _buildMainContent(),
+            ),
+            _buildInputField(),
+          ],
+        ),
       ),
     );
   }
@@ -71,13 +74,10 @@ class _ChatViewState extends State<ChatView> {
       return const Center(child: CircularProgressIndicator());
     } else if (_errorMessage != null) {
       return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            _errorMessage!,
-            style: const TextStyle(color: Colors.red),
-            textAlign: TextAlign.center,
-          ),
+        child: Text(
+          _errorMessage!,
+          style: const TextStyle(color: Colors.red),
+          textAlign: TextAlign.center,
         ),
       );
     } else if (_symptomTips == null || _symptomTips!.isEmpty) {
@@ -87,10 +87,10 @@ class _ChatViewState extends State<ChatView> {
           children: [
             Flexible(
               child: Text(
-                "Please enter below your symptoms or how you are feeling",
-                maxLines: 3,
+                "There are no tips for this case.",
+                maxLines: 2,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: AppColor.primaryColor),
+                style: TextStyle(fontSize: 18, color: AppColor.primaryColor),
               ),
             )
           ],
@@ -109,7 +109,7 @@ class _ChatViewState extends State<ChatView> {
 
   Widget _buildInputField() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
           Expanded(
