@@ -1,7 +1,9 @@
-import 'package:animate_do/animate_do.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
+import 'package:smartpill/features/screens/Auth/service/api_Manager_Auth.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -13,8 +15,10 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   String? users;
   bool isObscure = true;
-  TextEditingController emailcontroller = TextEditingController();
-  TextEditingController passwordcontrolar = TextEditingController();
+  // bool isLoading = false;
+  TextEditingController _emailcontroller = TextEditingController();
+  TextEditingController _passwordcontrolar = TextEditingController();
+
   var formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -60,10 +64,10 @@ class _LoginViewState extends State<LoginView> {
                   height: 20,
                 ),
                 TextFormField(
-                  controller: emailcontroller,
+                  controller: _emailcontroller,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "plz enter your emaail";
+                      return "please enter your emaail";
                     }
                     var regexp = RegExp(
                         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
@@ -111,10 +115,10 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 TextFormField(
                   obscureText: isObscure,
-                  controller: passwordcontrolar,
+                  controller: _passwordcontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Plz enter your password';
+                      return 'please enter your password';
                     }
                     return null;
                   },
@@ -161,47 +165,57 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      children: [
-                        Radio(
-                          activeColor: theme.primaryColor,
-                          value: 'user',
-                          groupValue: users,
-                          onChanged: (val) {
-                            setState(() {
-                              users = val;
-                            });
-                          },
-                        ),
-                        Text(
-                          'User',
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.primaryColor),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio(
-                            activeColor: theme.primaryColor,
-                            value: 'admin',
-                            groupValue: users,
-                            onChanged: (val) {
-                              setState(() {
-                                users = val;
-                              });
-                            }),
-                        Text(
-                          'Admin',
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.primaryColor),
-                        ),
-                      ],
-                    )
-                  ],
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     Row(
+                //       children: [
+                //         Radio(
+                //           activeColor: theme.primaryColor,
+                //           value: 'user',
+                //           groupValue: users,
+                //           onChanged: (val) {
+                //             setState(() {
+                //               users = val;
+                //             });
+                //           },
+                //         ),
+                //         Text(
+                //           'User',
+                //           style: theme.textTheme.bodyMedium
+                //               ?.copyWith(color: theme.primaryColor),
+                //         ),
+                //       ],
+                //     ),
+                //     Row(
+                //       children: [
+                //         Radio(
+                //             activeColor: theme.primaryColor,
+                //             value: 'admin',
+                //             groupValue: users,
+                //             onChanged: (val) {
+                //               setState(() {
+                //                 users = val;
+                //               });
+                //             }),
+                //         Text(
+                //           'Admin',
+                //           style: theme.textTheme.bodyMedium
+                //               ?.copyWith(color: theme.primaryColor),
+                //         ),
+                //       ],
+                //     )
+                //   ],
+                // ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, PageRoutesName.forgetPass);
+                  },
+                  child: Text(
+                    'forgot password?',
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: theme.primaryColor),
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -214,15 +228,10 @@ class _LoginViewState extends State<LoginView> {
                           horizontal: 30, vertical: 20),
                       backgroundColor: AppColor.primaryColor),
                   onPressed: () {
-                    // if (formkey.currentState!.validate()) {
-                    //   print('valid email');
-                    // }
-
-                    if (users == 'admin') {
-                      Navigator.pushNamed(context, PageRoutesName.admin);
-                    } else {
-                      Navigator.pushNamed(context, PageRoutesName.layout);
+                    if (formkey.currentState!.validate()) {
+                      _Login();
                     }
+                    // Navigator.pushNamed(context, PageRoutesName.layout);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -267,5 +276,45 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
     );
+  }
+
+  // ignore: non_constant_identifier_names
+  void _Login() async {
+    final email = _emailcontroller.text.trim();
+    final password = _passwordcontrolar.text.trim();
+
+    try {
+      final response = await ApiManagerAuth().login(email, password);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Center(
+              child: Text(
+                'Login Successful! ',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: AppColor.accentGreen),
+              ),
+            ),
+            backgroundColor: AppColor.whiteColor,
+            duration: Duration(seconds: 1)),
+      );
+      if (response.token != null) {
+        await Future.delayed(const Duration(seconds: 2));
+        Navigator.pushNamed(context, PageRoutesName.layout);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            backgroundColor: Colors.white,
+            content: Text(
+              ' Failed to login: email or password is incorrect',
+              style: TextStyle(
+                color: AppColor.errorColor,
+              ),
+            )),
+      );
+    }
   }
 }
