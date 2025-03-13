@@ -3,22 +3,22 @@ class MedicinePill {
   final String name;
   final String dose;
   final int amount;
-  final int days;
+  final int numberOfDays;
   final int timesPerDay;
   final DateTime startDate;
   final DateTime endDate;
-  final List<String> medicationTimes;
+  final List<String> reminderTimes;
 
   MedicinePill({
     this.id,
     required this.name,
     required this.dose,
     required this.amount,
-    required this.days,
+    required this.numberOfDays,
     required this.timesPerDay,
     required this.startDate,
     required this.endDate,
-    required this.medicationTimes,
+    required this.reminderTimes,
   });
 
   Map<String, dynamic> toJson() {
@@ -27,11 +27,11 @@ class MedicinePill {
       'name': name,
       'dose': dose,
       'amount': amount,
-      'days': days,
+      'numberOfDays': numberOfDays,
       'timesPerDay': timesPerDay,
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
-      'medicationTimes': medicationTimes,
+      'reminderTimes': reminderTimes,
     };
   }
 
@@ -41,11 +41,11 @@ class MedicinePill {
       name: map['name'],
       dose: map['dose'],
       amount: map['amount'],
-      days: map['days'],
+      numberOfDays: map['numberOfDays'],
       timesPerDay: map['timesPerDay'],
       startDate: DateTime.parse(map['startDate']),
       endDate: DateTime.parse(map['endDate']),
-      medicationTimes: List<String>.from(map['medicationTimes']),
+      reminderTimes: List<String>.from(map['reminderTimes']),
     );
   }
 }

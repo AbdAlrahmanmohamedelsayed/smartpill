@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
+import 'package:smartpill/features/screens/add_pill_reminder/manager/api_medicine.dart';
 import 'package:smartpill/features/screens/add_pill_reminder/presentation/widgets/custom_text_filed.dart';
 import 'package:smartpill/model/data_medicine.dart';
 
@@ -23,84 +24,103 @@ class _AddMedicineViewState extends State<AddMedicineView> {
 
   DateTime? _selectedStartDate;
   List<TimeOfDay?> _medicationTimes = [];
+  final MedicineService _medicineService = MedicineService();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _doseController.dispose();
+    _amountController.dispose();
+    _daysController.dispose();
+    _timesPerDayController.dispose();
+    _dateController.dispose();
+    _endDateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Add Medicine')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CustomTextFiled(
-                  controller: _nameController,
-                  label: 'Name*',
-                  hint: 'Name (e.g. Ibuprofen)',
-                ),
-                CustomTextFiled(
-                  controller: _doseController,
-                  label: 'Dose*',
-                  hint: 'Dose (e.g. 100mg)',
-                  isNumeric: true,
-                ),
-                CustomTextFiled(
-                  controller: _amountController,
-                  label: 'Amount*',
-                  hint: 'Amount (e.g. 3)',
-                  isNumeric: true,
-                ),
-                CustomTextFiled(
-                  controller: _daysController,
-                  label: 'Number of Days*',
-                  hint: 'Days (e.g. 7)',
-                  isNumeric: true,
-                  onChanged: (value) => _updateEndDate(value),
-                ),
-                CustomTextFiled(
-                  controller: _timesPerDayController,
-                  label: 'Times per Day*',
-                  hint: 'Times (e.g. 3)',
-                  isNumeric: true,
-                  onChanged: (value) => _generateTimeFields(value),
-                ),
-                _buildDateField(),
-                CustomTextFiled(
-                  controller: _endDateController,
-                  label: 'End Date',
-                  hint: 'Auto-calculated',
-                ),
-                const SizedBox(height: 20),
-                if (_medicationTimes.isNotEmpty) ...[
-                  Text(
-                    "Medication Times:",
-                    style: theme.textTheme.headlineSmall,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CustomTextFiled(
+                        controller: _nameController,
+                        label: 'Name*',
+                        hint: 'Name (e.g. Ibuprofen)',
+                      ),
+                      CustomTextFiled(
+                        controller: _doseController,
+                        label: 'Dose*',
+                        hint: 'Dose (e.g. 100mg)',
+                        isNumeric: true,
+                      ),
+                      CustomTextFiled(
+                        controller: _amountController,
+                        label: 'Amount*',
+                        hint: 'Amount (e.g. 3)',
+                        isNumeric: true,
+                      ),
+                      CustomTextFiled(
+                        controller: _daysController,
+                        label: 'Number of Days*',
+                        hint: 'Days (e.g. 7)',
+                        isNumeric: true,
+                        onChanged: (value) => _updateEndDate(value),
+                      ),
+                      CustomTextFiled(
+                        controller: _timesPerDayController,
+                        label: 'Times per Day*',
+                        hint: 'Times (e.g. 3)',
+                        isNumeric: true,
+                        onChanged: (value) => _generateTimeFields(value),
+                      ),
+                      _buildDateField(),
+                      CustomTextFiled(
+                        controller: _endDateController,
+                        label: 'End Date',
+                        hint: 'Auto-calculated',
+                      ),
+                      const SizedBox(height: 20),
+                      if (_medicationTimes.isNotEmpty) ...[
+                        Text(
+                          "Medication Times:",
+                          style: theme.textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildMedicationTimesFields(),
+                      ],
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            backgroundColor: AppColor.accentGreen),
+                        onPressed: _saveMedication,
+                        child: Text(
+                          'Save',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  _buildMedicationTimesFields(),
-                ],
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      backgroundColor: AppColor.accentGreen),
-                  onPressed: _saveMedication,
-                  child: Text(
-                    'Save',
-                    style: theme.textTheme.bodyLarge,
-                  ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -122,13 +142,13 @@ class _AddMedicineViewState extends State<AddMedicineView> {
   void _updateTimesBasedOnFirst() {
     if (_medicationTimes.isNotEmpty && _medicationTimes[0] != null) {
       TimeOfDay firstTime = _medicationTimes[0]!;
-      int interval = (15 * 60) ~/ _medicationTimes.length;
+      int interval = (24 * 60) ~/ _medicationTimes.length;
       setState(() {
         for (int i = 1; i < _medicationTimes.length; i++) {
           int newMinutes =
               (firstTime.hour * 60 + firstTime.minute) + (i * interval);
           _medicationTimes[i] =
-              TimeOfDay(hour: newMinutes ~/ 60, minute: newMinutes % 60);
+              TimeOfDay(hour: (newMinutes ~/ 60) % 24, minute: newMinutes % 60);
         }
       });
     }
@@ -155,7 +175,7 @@ class _AddMedicineViewState extends State<AddMedicineView> {
               controller: TextEditingController(
                 text: _medicationTimes[index]?.format(context) ?? '',
               ),
-              label: 'Time ${index + 1}',
+              label: 'Time ${index + 1}*',
               hint: 'Select time',
             ),
           ),
@@ -192,36 +212,94 @@ class _AddMedicineViewState extends State<AddMedicineView> {
     );
   }
 
-  void _saveMedication() {
-    if (_formKey.currentState!.validate()) {
-      MedicinePill medicine = MedicinePill(
-        name: _nameController.text,
-        dose: _doseController.text,
-        amount: int.parse(_amountController.text),
-        days: int.parse(_daysController.text),
-        timesPerDay: int.parse(_timesPerDayController.text),
-        startDate: _selectedStartDate!,
-        endDate: DateTime.parse(_endDateController.text),
-        medicationTimes:
-            _medicationTimes.map((time) => time!.format(context)).toList(),
-      );
+  bool _validateTimes() {
+    if (_medicationTimes.isEmpty) return false;
+    for (TimeOfDay? time in _medicationTimes) {
+      if (time == null) return false;
+    }
+    return true;
+  }
 
-      print(medicine.toJson());
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pop(context);
+  void _saveMedication() async {
+    if (_formKey.currentState!.validate() && _validateTimes()) {
+      setState(() {
+        _isLoading = true;
       });
 
+      try {
+        MedicinePill medicine = MedicinePill(
+          name: _nameController.text,
+          dose: _doseController.text,
+          amount: int.parse(_amountController.text),
+          numberOfDays: int.parse(_daysController.text),
+          timesPerDay: int.parse(_timesPerDayController.text),
+          startDate: _selectedStartDate!,
+          endDate: DateTime.parse(_endDateController.text),
+          reminderTimes:
+              _medicationTimes.map((time) => _formatTimeOfDay(time!)).toList(),
+        );
+
+        bool isSuccess = await _medicineService.addMedicine(medicine);
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (isSuccess) {
+          _showSuccessMessage();
+        } else {
+          _showErrorMessage();
+        }
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showErrorMessage('Error: ${e.toString()}');
+      }
+    } else if (!_validateTimes()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: Colors.white,
-            content: Text(
-              'Medication saved successfully!',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColor.accentGreen,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            )),
+        const SnackBar(
+          content: Text('Please select all medication times'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
+  }
+
+  void _showSuccessMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.white,
+        content: Text(
+          'Medication saved successfully!',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColor.accentGreen,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    Navigator.pop(context, true);
+  }
+
+  void _showErrorMessage([String? message]) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          message ?? 'Failed to save medication!',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return DateFormat('HH:mm').format(dt);
   }
 }
