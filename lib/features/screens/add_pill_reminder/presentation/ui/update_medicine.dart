@@ -3,18 +3,19 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/add_pill_reminder/data/medicine-Provider.dart';
-
 import 'package:smartpill/features/screens/add_pill_reminder/presentation/widgets/custom_text_filed.dart';
 import 'package:smartpill/model/data_medicine.dart';
 
-class AddMedicineView extends StatefulWidget {
-  const AddMedicineView({super.key});
+class EditMedicineView extends StatefulWidget {
+  final MedicinePill medicine;
+
+  const EditMedicineView({super.key, required this.medicine});
 
   @override
-  State<AddMedicineView> createState() => _AddMedicineViewState();
+  State<EditMedicineView> createState() => _EditMedicineViewState();
 }
 
-class _AddMedicineViewState extends State<AddMedicineView> {
+class _EditMedicineViewState extends State<EditMedicineView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _doseController = TextEditingController();
@@ -29,10 +30,27 @@ class _AddMedicineViewState extends State<AddMedicineView> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    // تعبئة الحقول ببيانات الدواء الحالية
+    _nameController.text = widget.medicine.name;
+    _doseController.text = widget.medicine.dose;
+    _amountController.text = widget.medicine.amount.toString();
+    _daysController.text = widget.medicine.numberOfDays.toString();
+    _timesPerDayController.text = widget.medicine.timesPerDay.toString();
+    _selectedStartDate = widget.medicine.startDate;
+    _dateController.text =
+        DateFormat('yyyy-MM-dd').format(widget.medicine.startDate);
+    _endDateController.text =
+        DateFormat('yyyy-MM-dd').format(widget.medicine.endDate);
+    _medicationTimes = List<TimeOfDay?>.from(widget.medicine.reminderTimes);
+  }
+
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Medicine')),
+      appBar: AppBar(title: const Text('Edit Medicine')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -89,16 +107,16 @@ class _AddMedicineViewState extends State<AddMedicineView> {
                         const SizedBox(height: 10),
                         _buildMedicationTimesFields(),
                       ],
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.all(16),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
                             backgroundColor: AppColor.accentGreen),
-                        onPressed: _saveMedication,
+                        onPressed: _updateMedication,
                         child: Text(
-                          'Save',
+                          'Update',
                           style: theme.textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -182,7 +200,7 @@ class _AddMedicineViewState extends State<AddMedicineView> {
       onTap: () async {
         DateTime? pickedDate = await showDatePicker(
           context: context,
-          initialDate: DateTime.now(),
+          initialDate: _selectedStartDate ?? DateTime.now(),
           firstDate: DateTime.now(),
           lastDate: DateTime(2027),
         );
@@ -213,13 +231,15 @@ class _AddMedicineViewState extends State<AddMedicineView> {
     return true;
   }
 
-  void _saveMedication() async {
+  void _updateMedication() async {
     if (_formKey.currentState!.validate() && _validateTimes()) {
       setState(() {
         _isLoading = true;
       });
 
-      MedicinePill medicine = MedicinePill(
+      // إنشاء كائن MedicinePill مع البيانات المحدثة
+      MedicinePill updatedMedicine = MedicinePill(
+        id: widget.medicine.id, // الحفاظ على نفس الـ ID
         name: _nameController.text,
         dose: _doseController.text,
         amount: int.parse(_amountController.text),
@@ -230,54 +250,37 @@ class _AddMedicineViewState extends State<AddMedicineView> {
         reminderTimes: List<TimeOfDay>.from(_medicationTimes),
       );
 
+      // استخدام MedicineProvider لتحديث الدواء
       final medicineProvider =
           Provider.of<MedicineProvider>(context, listen: false);
-      bool success = await medicineProvider.addMedicine(medicine);
+      bool success = await medicineProvider.updateMedicine(updatedMedicine);
 
       setState(() {
         _isLoading = false;
       });
 
       if (success) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            Future.delayed(Duration(seconds: 1), () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            });
-
-            return Dialog(
-              surfaceTintColor: AppColor.whiteColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AppColor.whiteColor,
+            content: Center(
+              child: Text(
+                'Medicine updated successfully!',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: AppColor.accentGreen),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Medicine added successfully!',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: AppColor.accentGreen),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+            ),
+          ),
         );
+        Navigator.pop(context); // العودة إلى الشاشة السابقة
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColor.whiteColor,
             content: Text(
-              'Failed to add medicine',
+              'Failed to update medicine',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
