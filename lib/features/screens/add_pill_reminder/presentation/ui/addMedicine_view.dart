@@ -15,6 +15,13 @@ class AddMedicineView extends StatefulWidget {
 }
 
 class _AddMedicineViewState extends State<AddMedicineView> {
+  @override
+  void initState() {
+    super.initState();
+    _selectedStartDate = DateTime.now();
+    _dateController.text = DateFormat('yyyy-MM-dd').format(_selectedStartDate!);
+  }
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _doseController = TextEditingController();

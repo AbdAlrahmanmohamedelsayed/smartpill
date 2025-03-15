@@ -32,7 +32,7 @@ class _EditMedicineViewState extends State<EditMedicineView> {
   @override
   void initState() {
     super.initState();
-    // تعبئة الحقول ببيانات الدواء الحالية
+
     _nameController.text = widget.medicine.name;
     _doseController.text = widget.medicine.dose;
     _amountController.text = widget.medicine.amount.toString();
@@ -154,8 +154,7 @@ class _EditMedicineViewState extends State<EditMedicineView> {
   void _updateTimesBasedOnFirst() {
     if (_medicationTimes.isNotEmpty) {
       TimeOfDay startTime = const TimeOfDay(hour: 8, minute: 0);
-      int interval =
-          (15 * 60) ~/ _medicationTimes.length; // التوزيع حتى 11 مساءً
+      int interval = (15 * 60) ~/ _medicationTimes.length;
 
       setState(() {
         for (int i = 0; i < _medicationTimes.length; i++) {
@@ -244,9 +243,8 @@ class _EditMedicineViewState extends State<EditMedicineView> {
         _isLoading = true;
       });
 
-      // إنشاء كائن MedicinePill مع البيانات المحدثة
       MedicinePill updatedMedicine = MedicinePill(
-        id: widget.medicine.id, // الحفاظ على نفس الـ ID
+        id: widget.medicine.id,
         name: _nameController.text,
         dose: _doseController.text,
         amount: int.parse(_amountController.text),
@@ -257,7 +255,6 @@ class _EditMedicineViewState extends State<EditMedicineView> {
         reminderTimes: List<TimeOfDay>.from(_medicationTimes),
       );
 
-      // استخدام MedicineProvider لتحديث الدواء
       final medicineProvider =
           Provider.of<MedicineProvider>(context, listen: false);
       bool success = await medicineProvider.updateMedicine(updatedMedicine);
@@ -267,21 +264,39 @@ class _EditMedicineViewState extends State<EditMedicineView> {
       });
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: AppColor.whiteColor,
-            content: Center(
-              child: Text(
-                'Medicine updated successfully!',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: AppColor.accentGreen),
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            Future.delayed(Duration(seconds: 1), () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
+
+            return Dialog(
+              surfaceTintColor: AppColor.whiteColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-            ),
-          ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Medicine updated successfully!',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: AppColor.accentGreen),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
-        Navigator.pop(context); // العودة إلى الشاشة السابقة
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
