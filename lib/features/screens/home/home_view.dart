@@ -5,6 +5,7 @@ import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/add_pill_reminder/data/medicine-Provider.dart';
 import 'package:smartpill/features/screens/add_pill_reminder/presentation/ui/update_medicine.dart';
 import 'package:smartpill/features/screens/add_pill_reminder/presentation/widgets/custom_medicine_item.dart';
+import 'package:smartpill/utils/token_manager.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,6 +15,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  String profileName = 'User';
+  bool isLoading = true;
   final EasyInfiniteDateTimelineController _controller =
       EasyInfiniteDateTimelineController();
   var _focusDate = DateTime.now();
@@ -21,7 +24,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-
+    _loadProfileData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<MedicineProvider>(context, listen: false).loadMedicines();
     });
@@ -41,16 +44,18 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 50),
                   color: AppColor.primaryColor,
                   height: medi.size.height * .25,
                   width: medi.size.width,
                   alignment: Alignment.topLeft,
                   child: Text(
-                    'Home',
+                    "Welcome, ${profileName} 👋",
                     style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                       color: AppColor.whiteColor,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Positioned(
@@ -259,5 +264,24 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
     );
+  }
+
+  Future<void> _loadProfileData() async {
+    try {
+      final tokenData = await TokenManager.getToken();
+      final dispalyName = tokenData['displayName'];
+
+      setState(() {
+        if (dispalyName != null && dispalyName.isNotEmpty) {
+          profileName = dispalyName;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading profile data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

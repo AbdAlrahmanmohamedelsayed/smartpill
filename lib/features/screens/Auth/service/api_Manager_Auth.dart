@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:smartpill/model/Auth_Responce.dart';
@@ -17,8 +16,12 @@ class ApiManagerAuth {
         receiveTimeout: const Duration(seconds: 10),
       ),
     );
+    // final Dio _dio = Dio(BaseOptions(
+    //   baseUrl: "http://loginregister.runasp.net/api/Account",
+    //   connectTimeout: const Duration(seconds: 10),
+    //   receiveTimeout: const Duration(seconds: 20),
+    // ));
 
-    // Configure certificate handling for development
     (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
@@ -26,12 +29,6 @@ class ApiManagerAuth {
       return client;
     };
   }
-
-  // final Dio _dio = Dio(BaseOptions(
-  //   baseUrl: "http://loginregister.runasp.net/api/Account",
-  //   connectTimeout: const Duration(seconds: 10),
-  //   receiveTimeout: const Duration(seconds: 20),
-  // ));
 
   Future<AuthResponce> login(String email, String password) async {
     try {
@@ -43,8 +40,9 @@ class ApiManagerAuth {
       if (response.statusCode == 200) {
         AuthResponce authResponse = AuthResponce.fromJson(response.data);
 
-        // حفظ التوكن والبريد الإلكتروني
-        await TokenManager.saveToken(authResponse.token, email);
+        // حفظ التوكن والبريد الإلكتروني واسم المستخدم
+        await TokenManager.saveToken(
+            authResponse.token, email, authResponse.displayName);
 
         return authResponse;
       } else if (response.statusCode == 401) {

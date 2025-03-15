@@ -75,9 +75,10 @@ class CustomMedicineItem extends StatelessWidget {
 
                         return Chip(
                           label: Text(formattedTime,
-                              style: theme.textTheme.bodySmall),
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: AppColor.textColorPrimary)),
                           backgroundColor:
-                              AppColor.primaryColor.withOpacity(0.2),
+                              AppColor.primaryColor.withOpacity(0.5),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),

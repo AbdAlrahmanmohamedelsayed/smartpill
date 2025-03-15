@@ -39,8 +39,9 @@ class ReportView extends StatelessWidget {
           children: [
             Text(
               "Recent Health Summary",
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -56,7 +57,8 @@ class ReportView extends StatelessWidget {
               child: Card(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 elevation: 4,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -66,10 +68,12 @@ class ReportView extends StatelessWidget {
                       Text(
                         "Last 7 Days Medication Report",
                         style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold, fontSize: 22),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
                       ),
                       const SizedBox(height: 12),
-                      Expanded(child: _buildChart()),
+                      Expanded(child: _buildLineChart()),
                     ],
                   ),
                 ),
@@ -83,14 +87,19 @@ class ReportView extends StatelessWidget {
                   backgroundColor: AppColor.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // يمكنك إضافة وظيفة أخرى هنا إذا لزم الأمر
+                },
                 icon: const Icon(Icons.download, color: Colors.white),
                 label: Text(
                   "Download Report",
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: AppColor.whiteColor),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -127,22 +136,29 @@ class ReportView extends StatelessWidget {
     );
   }
 
-  Widget _buildChart() {
-    final List<bool> medicationData = [
-      true,
-      false,
-      true,
-      true,
-      false,
-      true,
-      true
-    ];
+  Widget _buildLineChart() {
+    final List<double> takenData = [2, 3, 1, 3, 2, 2, 3]; // Taken doses per day
+    final List<double> missedData = [
+      1,
+      0,
+      2,
+      0,
+      1,
+      1,
+      0
+    ]; // Missed doses per day
     final List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-    return BarChart(
-      BarChartData(
-        alignment: BarChartAlignment.spaceBetween,
-        barTouchData: BarTouchData(enabled: false),
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: Colors.grey.withOpacity(0.3),
+            strokeWidth: 1,
+          ),
+        ),
         titlesData: FlTitlesData(
           show: true,
           bottomTitles: AxisTitles(
@@ -151,16 +167,28 @@ class ReportView extends StatelessWidget {
               getTitlesWidget: (value, meta) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 6.0),
-                  child: Text(days[value.toInt()],
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    days[value.toInt()],
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 );
               },
+              reservedSize: 30,
             ),
           ),
-          leftTitles: const AxisTitles(
+          leftTitles: AxisTitles(
             sideTitles: SideTitles(
-              showTitles: false,
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                return Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 12),
+                );
+              },
+              reservedSize: 30,
             ),
           ),
           topTitles:
@@ -168,30 +196,35 @@ class ReportView extends StatelessWidget {
           rightTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) => FlLine(
-            color: Colors.grey.withOpacity(0.2),
-            strokeWidth: 1,
-          ),
-        ),
         borderData: FlBorderData(show: false),
-        barGroups: medicationData.asMap().entries.map((entry) {
-          final index = entry.key;
-          final isTaken = entry.value;
-          return BarChartGroupData(
-            x: index,
-            barRods: [
-              BarChartRodData(
-                toY: isTaken ? 1 : 0.6,
-                color: isTaken ? Colors.green : Colors.red,
-                width: 24,
-                borderRadius: BorderRadius.circular(6),
-              ),
-            ],
-          );
-        }).toList(),
+        lineBarsData: [
+          LineChartBarData(
+            spots: takenData.asMap().entries.map((entry) {
+              return FlSpot(entry.key.toDouble(), entry.value);
+            }).toList(),
+            isCurved: true,
+            color: AppColor.primaryColor,
+            barWidth: 3,
+            dotData: FlDotData(show: true),
+            belowBarData: BarAreaData(
+              show: true,
+              color: AppColor.primaryColor.withOpacity(0.2),
+            ),
+          ),
+          LineChartBarData(
+            spots: missedData.asMap().entries.map((entry) {
+              return FlSpot(entry.key.toDouble(), entry.value);
+            }).toList(),
+            isCurved: true,
+            color: AppColor.errorColor,
+            barWidth: 3,
+            dotData: FlDotData(show: true),
+            belowBarData: BarAreaData(
+              show: true,
+              color: AppColor.errorColor.withOpacity(0.2),
+            ),
+          ),
+        ],
       ),
     );
   }
