@@ -148,97 +148,112 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
           ),
-          // عرض الأدوية
-          Expanded(
-            child: Consumer<MedicineProvider>(
-              builder: (context, medicineProvider, child) {
-                if (medicineProvider.isLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (medicineProvider.errorMessage != null) {
-                  return Center(
-                    child: Text(medicineProvider.errorMessage!),
-                  );
-                } else if (medicineProvider.medicines.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                          width: 170, 'assets/images/icons/no-drugs.png'),
-                      const SizedBox(height: 16),
-                      Text(
-                        "you don't have any medicine to take 💊",
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.errorColor),
+          RefreshIndicator(
+            color: AppColor.primaryColor,
+            onRefresh: () async {
+              await Provider.of<MedicineProvider>(context, listen: false)
+                  .loadMedicines();
+            },
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Consumer<MedicineProvider>(
+                builder: (context, medicineProvider, child) {
+                  if (medicineProvider.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColor.primaryColor,
                       ),
-                    ],
-                  );
-                } else {
-                  return ListView.builder(
-                    itemCount: medicineProvider.medicines.length,
-                    itemBuilder: (context, index) {
-                      final medicine = medicineProvider.medicines[index];
-                      return CustomMedicineItem(
-                        data: medicine,
-                        onEdit: () async {
-                          final updatedMedicine = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditMedicineView(medicine: medicine),
-                            ),
-                          );
-
-                          if (updatedMedicine != null) {
-                            bool success = await medicineProvider
-                                .updateMedicine(updatedMedicine);
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                        Text('Medicine updated successfully')),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Failed to update medicine')),
-                              );
-                            }
-                          }
-                        },
-                        onDelete: () async {
-                          debugPrint(
-                              'Deleting medicine with id: ${medicine.id}');
-                          if (medicine.id != null) {
-                            bool success = await medicineProvider
-                                .deleteMedicine(medicine.id!);
-                            print(medicine.id);
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                        Text('Medicine deleted successfully')),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Failed to delete medicine')),
-                              );
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Medicine ID is null')),
+                    );
+                  } else if (medicineProvider.errorMessage != null) {
+                    return Center(
+                      child: Text(medicineProvider.errorMessage!),
+                    );
+                  } else if (medicineProvider.medicines.isEmpty) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                            width: 170, 'assets/images/icons/no-drugs.png'),
+                        const SizedBox(height: 16),
+                        Text(
+                          "you don't have any medicine to take 💊",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.errorColor),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(
+                        thickness: 3,
+                        endIndent: 35,
+                        indent: 35,
+                        color: AppColor.textColorHint,
+                      ),
+                      itemCount: medicineProvider.medicines.length,
+                      itemBuilder: (context, index) {
+                        final medicine = medicineProvider.medicines[index];
+                        return CustomMedicineItem(
+                          data: medicine,
+                          onEdit: () async {
+                            final updatedMedicine = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditMedicineView(medicine: medicine),
+                              ),
                             );
-                          }
-                        },
-                      );
-                    },
-                  );
-                }
-              },
+
+                            if (updatedMedicine != null) {
+                              bool success = await medicineProvider
+                                  .updateMedicine(updatedMedicine);
+                              if (success) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Medicine updated successfully')),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Failed to update medicine')),
+                                );
+                              }
+                            }
+                          },
+                          onDelete: () async {
+                            if (medicine.id != null) {
+                              bool success = await medicineProvider
+                                  .deleteMedicine(medicine.id!);
+                              print(medicine.id);
+                              if (success) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Medicine deleted successfully')),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Failed to delete medicine')),
+                                );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Medicine ID is null')),
+                              );
+                            }
+                          },
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
           ),
         ],

@@ -146,20 +146,27 @@ class _EditMedicineViewState extends State<EditMedicineView> {
     if (count > 0) {
       setState(() {
         _medicationTimes = List.generate(count, (index) => null);
+        _updateTimesBasedOnFirst();
       });
     }
   }
 
   void _updateTimesBasedOnFirst() {
-    if (_medicationTimes.isNotEmpty && _medicationTimes[0] != null) {
-      TimeOfDay firstTime = _medicationTimes[0]!;
-      int interval = (24 * 60) ~/ _medicationTimes.length;
+    if (_medicationTimes.isNotEmpty) {
+      TimeOfDay startTime = const TimeOfDay(hour: 8, minute: 0);
+      int interval =
+          (15 * 60) ~/ _medicationTimes.length; // التوزيع حتى 11 مساءً
+
       setState(() {
-        for (int i = 1; i < _medicationTimes.length; i++) {
+        for (int i = 0; i < _medicationTimes.length; i++) {
           int newMinutes =
-              (firstTime.hour * 60 + firstTime.minute) + (i * interval);
-          _medicationTimes[i] =
-              TimeOfDay(hour: (newMinutes ~/ 60) % 24, minute: newMinutes % 60);
+              (startTime.hour * 60 + startTime.minute) + (i * interval);
+          int hour = (newMinutes ~/ 60) % 24;
+          int minute = newMinutes % 60;
+
+          if (hour < 23 || (hour == 23 && minute == 0)) {
+            _medicationTimes[i] = TimeOfDay(hour: hour, minute: minute);
+          }
         }
       });
     }

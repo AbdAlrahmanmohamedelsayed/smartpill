@@ -21,7 +21,7 @@ class CustomMedicineItem extends StatelessWidget {
     return Card(
       color: Colors.white,
       surfaceTintColor: AppColor.primaryColor.withOpacity(0.2),
-      shadowColor: AppColor.primaryColor,
+      shadowColor: AppColor.textColorHint,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       elevation: 7,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -46,15 +46,19 @@ class CustomMedicineItem extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text('💊 Dose: ${data.dose} mg',
                       style: theme.textTheme.bodySmall),
-                  Text('📦 Pills Amount: ${data.amount}',
+                  Text('💊 Pills Amount: ${data.amount}',
                       style: theme.textTheme.bodySmall),
                   const SizedBox(height: 7),
                   Wrap(
                     spacing: 6,
                     runSpacing: 4,
                     children: data.reminderTimes.map((time) {
-                      String formattedTime =
-                          "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                      final formattedTime =
+                          MaterialLocalizations.of(context).formatTimeOfDay(
+                        time,
+                        alwaysUse24HourFormat: false,
+                      );
+
                       return Chip(
                         label: Text(formattedTime,
                             style: theme.textTheme.bodySmall),
@@ -71,6 +75,7 @@ class CustomMedicineItem extends StatelessWidget {
 
             // Buttons (Right Side)
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Column(
                   children: [
@@ -80,6 +85,9 @@ class CustomMedicineItem extends StatelessWidget {
                         'assets/images/icons/edit-icon.png',
                         width: 60,
                       ),
+                    ),
+                    const SizedBox(
+                      height: 12,
                     ),
                     InkWell(
                       onTap: onDelete,
