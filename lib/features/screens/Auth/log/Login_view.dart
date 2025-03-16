@@ -270,6 +270,23 @@ class _LoginViewState extends State<LoginView> {
                         ))
                   ],
                 ),
+                Center(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 10),
+                          backgroundColor: AppColor.accentGold),
+                      onPressed: () {
+                        Navigator.pushNamed(context, PageRoutesName.layout);
+                      },
+                      child: Text(
+                        'Guest',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                            color: AppColor.whiteColor, fontSize: 25),
+                      )),
+                )
               ],
             ),
           ),
