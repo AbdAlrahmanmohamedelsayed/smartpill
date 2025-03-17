@@ -155,6 +155,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           RefreshIndicator(
             color: AppColor.primaryColor,
+            backgroundColor: AppColor.whiteColor,
             onRefresh: () async {
               await Provider.of<MedicineProvider>(context, listen: false)
                   .loadMedicines();

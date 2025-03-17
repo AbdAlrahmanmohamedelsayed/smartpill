@@ -111,10 +111,10 @@ class _MenuViewState extends State<MenuView> {
             ),
             CustomListtile(
               onTap: () {
-                Navigator.pushNamed(context, PageRoutesName.chatTips);
+                Navigator.pushNamed(context, PageRoutesName.chatView);
               },
               imagePath: 'assets/images/icons/advice.png',
-              tittle: 'your symptoms guide',
+              tittle: ' symptoms guide',
             ),
             const SizedBox(
               height: 12,

@@ -14,46 +14,83 @@ class CardInteractionView extends StatelessWidget {
     var meia = MediaQuery.of(context);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       height: meia.size.height * .4,
       width: meia.size.width * 0.30,
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.errorColor, width: 3),
-        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: AppColor.errorColor, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 10,
+            spreadRadius: 3,
+            offset: const Offset(3, 6),
+          ),
+        ],
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(interactiondat.drug1,
+              Expanded(
+                child: Text(
+                  interactiondat.drug1,
                   maxLines: 2,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: AppColor.textColorPrimary)),
-              SizedBox(
-                width: 50,
-                child:
-                    Image.asset(width: 50, 'assets/images/icons/exchange.png'),
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColor.textColorPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-              Text(interactiondat.drug2,
+              Image.asset(
+                'assets/images/icons/exchange.png',
+                width: 40,
+                height: 40,
+                fit: BoxFit.contain,
+              ),
+              Expanded(
+                child: Text(
+                  interactiondat.drug2,
                   maxLines: 2,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: AppColor.textColorPrimary)),
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColor.textColorPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
-          Text(interactiondat.interactionType,
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+            decoration: BoxDecoration(
+              color: AppColor.errorColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              interactiondat.interactionType,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: AppColor.errorColor,
-              )),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           Text(
-            maxLines: 2,
             interactiondat.effect,
+            maxLines: 3,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: AppColor.errorColor,
+              fontWeight: FontWeight.w500,
             ),
-          )
+          ),
         ],
       ),
     );

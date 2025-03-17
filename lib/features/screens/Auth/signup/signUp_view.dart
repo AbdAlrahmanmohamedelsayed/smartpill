@@ -2,7 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/Auth/service/api_Manager_Auth.dart';
-import 'package:smartpill/model/signUp.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -12,16 +11,16 @@ class SignupView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignupView> {
+  final _formKey = GlobalKey<FormState>();
   String? users;
   bool isObscure = true;
-  TextEditingController _usernamecontrolar = TextEditingController();
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _passwordcontrolar = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    var formkey = GlobalKey<FormState>();
     var theme = Theme.of(context);
-    // var media = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -35,241 +34,120 @@ class _SignupViewState extends State<SignupView> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
-            key: formkey,
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FadeInDown(
                   delay: const Duration(microseconds: 400),
                   child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 10),
-                      width: 450,
-                      child: Image.asset(
-                        'assets/images/Sign_up.png',
-                        fit: BoxFit.cover,
-                      )),
-                ),
-                TextFormField(
-                  controller: _usernamecontrolar,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "please enter your full name";
-                    }
-
-                    return null;
-                  },
-                  cursorColor: AppColor.primaryColor,
-                  style: theme.textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(16),
-                    suffix: Icon(
-                      Icons.person,
-                      color: theme.primaryColor,
-                    ),
-                    label: Text(
-                      'username',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    hintText: 'enter your full name ',
-                    hintStyle: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.black38),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                    width: 450,
+                    child: Image.asset(
+                      'assets/images/Sign_up.png',
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
                 TextFormField(
-                  controller: _emailcontroller,
+                  controller: _usernameController,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "please enter your emaail";
+                      return "Please enter your full name";
                     }
-                    var regexp = RegExp(
-                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                    if (!regexp.hasMatch(value)) {
-                      return 'Invalid email';
+                    if (value.length < 3) {
+                      return "Username must be at least 3 characters";
                     }
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
-                  style: theme.textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(16),
-                    suffix: Icon(
-                      Icons.email,
-                      color: theme.primaryColor,
-                    ),
-                    label: Text(
-                      'E-mail',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    hintText: 'enter your email ',
-                    hintStyle: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.black38),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                  ),
+                  decoration: _inputDecoration(theme, 'Username', Icons.person),
                 ),
-                const SizedBox(
-                  height: 20,
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _emailController,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Please enter your email";
+                    }
+                    final emailPattern = RegExp(
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                    if (!emailPattern.hasMatch(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
+                  cursorColor: AppColor.primaryColor,
+                  decoration: _inputDecoration(theme, 'E-mail', Icons.email),
                 ),
+                const SizedBox(height: 20),
                 TextFormField(
                   obscureText: isObscure,
-                  controller: _passwordcontrolar,
+                  controller: _passwordController,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Plz enter your password';
+                      return 'Please enter your password';
+                    }
+                    if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$')
+                        .hasMatch(value)) {
+                      return 'Password must contain at least one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long';
                     }
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(12),
-                    suffix: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObscure = !isObscure;
-                          });
-                        },
-                        icon: Icon(
-                          isObscure ? Icons.visibility : Icons.visibility_off,
-                          color: theme.primaryColor,
-                        )),
-                    label: Text(
-                      'password',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    hintText: 'enter your password ',
-                    hintStyle: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.black38),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                  ),
+                  decoration:
+                      _inputDecoration(theme, 'Password', Icons.lock, true),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Row(
-                      children: [
-                        Radio(
-                          activeColor: theme.primaryColor,
-                          value: 'user',
-                          groupValue: users,
-                          onChanged: (val) {
-                            setState(() {
-                              users = val;
-                            });
-                          },
-                        ),
-                        Text(
-                          'User',
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.primaryColor),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio(
-                            activeColor: theme.primaryColor,
-                            value: 'doctor',
-                            groupValue: users,
-                            onChanged: (val) {
-                              setState(() {
-                                users = val;
-                              });
-                            }),
-                        Text(
-                          'Doctor',
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: theme.primaryColor),
-                        ),
-                      ],
-                    )
+                    _buildRadioButton('User', 'user', theme),
+                    _buildRadioButton('Doctor', 'doctor', theme),
                   ],
                 ),
-                FilledButton(
-                  style: FilledButton.styleFrom(
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 20),
-                      backgroundColor: AppColor.buttonPrimary),
-                  onPressed: () {
-                    if (formkey.currentState!.validate()) {
-                      _Signup();
-                    }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Create Account',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                        size: 22,
-                      )
-                    ],
+                      backgroundColor: AppColor.buttonPrimary,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate() && users != null) {
+                        _signup();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please complete all fields"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Create Account',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                        const Icon(Icons.arrow_forward,
+                            color: Colors.white, size: 22)
+                      ],
+                    ),
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -278,53 +156,81 @@ class _SignupViewState extends State<SignupView> {
     );
   }
 
-  void _Signup() async {
-    final username = _usernamecontrolar.text.trim();
-    final email = _emailcontroller.text.trim();
-    final password = _passwordcontrolar.text.trim();
-    final role = users;
+  Widget _buildRadioButton(String title, String value, ThemeData theme) {
+    return Row(
+      children: [
+        Radio(
+          activeColor: theme.primaryColor,
+          value: value,
+          groupValue: users,
+          onChanged: (val) {
+            setState(() {
+              users = val;
+            });
+          },
+        ),
+        Text(
+          title,
+          style:
+              theme.textTheme.bodyMedium?.copyWith(color: theme.primaryColor),
+        ),
+      ],
+    );
+  }
+
+  InputDecoration _inputDecoration(ThemeData theme, String label, IconData icon,
+      [bool isPassword = false]) {
+    return InputDecoration(
+      contentPadding: const EdgeInsets.all(16),
+      suffixIcon: isPassword
+          ? IconButton(
+              onPressed: () {
+                setState(() {
+                  isObscure = !isObscure;
+                });
+              },
+              icon: Icon(
+                isObscure ? Icons.visibility : Icons.visibility_off,
+                color: theme.primaryColor,
+              ),
+            )
+          : Icon(icon, color: theme.primaryColor),
+      labelText: label,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(color: theme.primaryColor, width: 2),
+      ),
+    );
+  }
+
+  void _signup() async {
     try {
-      final response =
-          await ApiManagerAuth().signUp(username, email, password, role!);
+      final response = await ApiManagerAuth().signUp(
+        _usernameController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        users!,
+      );
       if (response.token != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: AppColor.whiteColor,
-            content: Text(
-              "Sign-up successful!",
-              style: TextStyle(
-                  fontSize: 22,
-                  color: AppColor.accentGreen,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
+          SnackBar(
+              content: Text("Sign-up successful!",
+                  style: TextStyle(color: AppColor.accentGreen)),
+              backgroundColor: Colors.white),
         );
-
         Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              backgroundColor: AppColor.whiteColor,
-              content: Text(
-                'Sign Up failed',
-                style: TextStyle(
-                    fontSize: 22,
-                    color: AppColor.errorColor,
-                    fontWeight: FontWeight.w600),
-              )),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Sign Up failed",
+                style: TextStyle(color: AppColor.errorColor)),
+            backgroundColor: Colors.white));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-          'Falied to SignUp',
-          style: TextStyle(
-              fontSize: 22,
-              color: AppColor.errorColor,
-              fontWeight: FontWeight.w600),
-        )), // Error: $e
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Failed to Sign Up: ${e.toString()}",
+              style: TextStyle(color: AppColor.errorColor)),
+          backgroundColor: Colors.white));
     }
   }
 }

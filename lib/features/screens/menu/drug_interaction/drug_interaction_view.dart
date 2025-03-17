@@ -71,9 +71,10 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    backgroundColor: AppColor.accentGreen,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    backgroundColor: AppColor.primaryColor,
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -88,8 +89,9 @@ class _DrugInteractionViewState extends State<DrugInteractionView> {
                   },
                   child: Text(
                     'Check Interaction',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: AppColor.textColorPrimary),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AppColor.whiteColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 20),

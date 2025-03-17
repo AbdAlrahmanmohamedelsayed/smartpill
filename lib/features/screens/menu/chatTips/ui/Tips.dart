@@ -1,18 +1,19 @@
 // chat_view.dart
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
-import 'package:smartpill/features/screens/menu/chatTips/ApiService_chat.dart';
-import 'package:smartpill/features/screens/widgets/tips_card.dart';
+import 'package:smartpill/features/screens/menu/chatTips/service/ApiService_chat.dart';
+import 'package:smartpill/features/screens/menu/chatTips/widgets/InputField_Chat.dart';
+import 'package:smartpill/features/screens/menu/chatTips/widgets/tips_card.dart';
 import 'package:smartpill/model/SymptomTips.dart';
 
-class ChatView extends StatefulWidget {
-  const ChatView({super.key});
+class Tips extends StatefulWidget {
+  const Tips({super.key});
 
   @override
-  State<ChatView> createState() => _ChatViewState();
+  State<Tips> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends State<ChatView> {
+class _ChatViewState extends State<Tips> {
   final TextEditingController _controller = TextEditingController();
   final ApiService _apiService = ApiService();
   bool _isLoading = false;
@@ -62,7 +63,15 @@ class _ChatViewState extends State<ChatView> {
             Expanded(
               child: _buildMainContent(),
             ),
-            _buildInputField(),
+            InputFieldChat(
+              controller: _controller,
+              onSend: (p0) {
+                if (_controller.text.isNotEmpty) {
+                  _getTips(_controller.text);
+                  _controller.clear();
+                }
+              },
+            )
           ],
         ),
       ),
@@ -71,7 +80,10 @@ class _ChatViewState extends State<ChatView> {
 
   Widget _buildMainContent() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+          child: CircularProgressIndicator(
+        color: AppColor.primaryColor,
+      ));
     } else if (_errorMessage != null) {
       return Center(
         child: Text(
@@ -105,59 +117,5 @@ class _ChatViewState extends State<ChatView> {
         },
       );
     }
-  }
-
-  Widget _buildInputField() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              style: const TextStyle(fontSize: 20),
-              controller: _controller,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintStyle: const TextStyle(
-                  color: AppColor.textColorHint,
-                  fontSize: 18,
-                ),
-                hintText: "How Are You Feeling At The Moment",
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                        color: AppColor.primaryColor,
-                        width: 2.0,
-                        style: BorderStyle.solid)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                        color: AppColor.primaryColor,
-                        width: 2.0,
-                        style: BorderStyle.solid)),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                        color: Colors.black,
-                        width: 2.0,
-                        style: BorderStyle.solid)),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.send,
-              size: 32,
-            ),
-            onPressed: () {
-              if (_controller.text.isNotEmpty) {
-                _getTips(_controller.text);
-                _controller.clear();
-              }
-            },
-          ),
-        ],
-      ),
-    );
   }
 }
