@@ -59,7 +59,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
                 Positioned(
-                  top: 120,
+                  top: 100,
                   child: Container(
                     decoration: BoxDecoration(
                       boxShadow: [
