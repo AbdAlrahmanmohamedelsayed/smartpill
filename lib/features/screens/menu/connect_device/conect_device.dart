@@ -108,7 +108,10 @@ class _ConnectDeviceState extends State<ConnectDevice> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Enter WiFi Information'),
+        title: const Text(
+          'Enter WiFi Information',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

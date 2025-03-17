@@ -11,16 +11,11 @@ class ApiManagerAuth {
   ApiManagerAuth() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: "http://10.0.2.2:5238/api/Accounts", // Changed from localhost
+        baseUrl: "http://healthcare1.runasp.net/api/Accounts",
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
       ),
     );
-    // final Dio _dio = Dio(BaseOptions(
-    //   baseUrl: "http://loginregister.runasp.net/api/Account",
-    //   connectTimeout: const Duration(seconds: 10),
-    //   receiveTimeout: const Duration(seconds: 20),
-    // ));
 
     (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
@@ -40,20 +35,20 @@ class ApiManagerAuth {
       if (response.statusCode == 200) {
         AuthResponce authResponse = AuthResponce.fromJson(response.data);
 
-        // حفظ التوكن والبريد الإلكتروني واسم المستخدم
+        // Save token, email, and username
         await TokenManager.saveToken(
             authResponse.token, email, authResponse.displayName);
 
         return authResponse;
       } else if (response.statusCode == 401) {
-        throw Exception('Failed to login: email or password is incorrect.');
+        throw Exception('Login failed: Incorrect email or password.');
       } else {
         throw Exception(
-            'Failed to login. Server responded with: ${response.statusCode}');
+            'Login failed. Server responded with status code: ${response.statusCode}');
       }
     } on DioException catch (e) {
       throw Exception(
-          'Failed to login. Error: ${e.response?.statusCode ?? 'Unknown error'}');
+          'Login failed. Error: ${e.message}, Response: ${e.response?.data}');
     }
   }
 
@@ -70,14 +65,18 @@ class ApiManagerAuth {
       if (response.statusCode == 200 || response.statusCode == 201) {
         AuthResponce authResponse = AuthResponce.fromJson(response.data);
 
+        // Save token, email, and username after signup
+        await TokenManager.saveToken(
+            authResponse.token, email, authResponse.displayName);
+
         return authResponse;
       } else {
         throw Exception(
-            'Failed to sign up. Server responded with: ${response.statusCode}');
+            'Sign-up failed. Server responded with status code: ${response.statusCode}');
       }
     } on DioException catch (e) {
       throw Exception(
-          'Failed to sign up. Error: ${e.response?.statusCode ?? 'Unknown error'}');
+          'Sign-up failed. Error: ${e.message}, Response: ${e.response?.data}');
     }
   }
 }

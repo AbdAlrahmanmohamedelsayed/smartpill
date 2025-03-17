@@ -118,7 +118,11 @@ class _LoginViewState extends State<LoginView> {
                   controller: _passwordcontrolar,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'please enter your password';
+                      return 'Please enter your password';
+                    }
+                    if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$')
+                        .hasMatch(value)) {
+                      return 'Password must contain at least one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long';
                     }
                     return null;
                   },
@@ -127,29 +131,31 @@ class _LoginViewState extends State<LoginView> {
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12),
                     suffix: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObscure = !isObscure;
-                          });
-                        },
-                        icon: Icon(
-                          isObscure ? Icons.visibility : Icons.visibility_off,
-                          color: theme.primaryColor,
-                        )),
+                      onPressed: () {
+                        setState(() {
+                          isObscure = !isObscure;
+                        });
+                      },
+                      icon: Icon(
+                        isObscure ? Icons.visibility : Icons.visibility_off,
+                        color: theme.primaryColor,
+                      ),
+                    ),
                     label: Text(
-                      'password',
+                      'Password',
                       style: theme.textTheme.bodySmall?.copyWith(
                           fontSize: 20,
                           color: theme.primaryColor,
                           fontWeight: FontWeight.bold),
                     ),
-                    hintText: 'enter your password ',
+                    hintText: 'Enter your password',
                     hintStyle: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500, color: Colors.black38),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor)),
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          BorderSide(width: 2, color: theme.primaryColor),
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                       borderSide:
@@ -165,48 +171,6 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(
                   height: 10,
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     Row(
-                //       children: [
-                //         Radio(
-                //           activeColor: theme.primaryColor,
-                //           value: 'user',
-                //           groupValue: users,
-                //           onChanged: (val) {
-                //             setState(() {
-                //               users = val;
-                //             });
-                //           },
-                //         ),
-                //         Text(
-                //           'User',
-                //           style: theme.textTheme.bodyMedium
-                //               ?.copyWith(color: theme.primaryColor),
-                //         ),
-                //       ],
-                //     ),
-                //     Row(
-                //       children: [
-                //         Radio(
-                //             activeColor: theme.primaryColor,
-                //             value: 'admin',
-                //             groupValue: users,
-                //             onChanged: (val) {
-                //               setState(() {
-                //                 users = val;
-                //               });
-                //             }),
-                //         Text(
-                //           'Admin',
-                //           style: theme.textTheme.bodyMedium
-                //               ?.copyWith(color: theme.primaryColor),
-                //         ),
-                //       ],
-                //     )
-                //   ],
-                // ),
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, PageRoutesName.forgetPass);
@@ -270,23 +234,6 @@ class _LoginViewState extends State<LoginView> {
                         ))
                   ],
                 ),
-                Center(
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 10),
-                          backgroundColor: AppColor.accentGold),
-                      onPressed: () {
-                        Navigator.pushNamed(context, PageRoutesName.layout);
-                      },
-                      child: Text(
-                        'Guest',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                            color: AppColor.whiteColor, fontSize: 25),
-                      )),
-                )
               ],
             ),
           ),

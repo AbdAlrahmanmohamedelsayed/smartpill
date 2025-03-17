@@ -5,7 +5,7 @@ import 'package:smartpill/utils/token_manager.dart';
 
 class MedicineService {
   final Dio _dio = Dio();
-  final String baseUrl = 'http://10.0.2.2:5238/api/Medicine';
+  final String baseUrl = 'http://healthcare1.runasp.net/api/Medicine';
 
   MedicineService() {
     _dio.options.headers["Content-Type"] = "application/json";
@@ -15,14 +15,17 @@ class MedicineService {
   void _setupAuthInterceptor() {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final tokenData = await TokenManager.getToken();
-        final token = tokenData['token'];
+        try {
+          final tokenData = await TokenManager.getToken();
+          final token = tokenData['token'];
 
-        if (token != null && token.isNotEmpty) {
-          options.headers['Authorization'] = 'Bearer $token';
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+        } catch (e) {
+          debugPrint('Error fetching token: $e');
         }
-
-        return handler.next(options);
+        handler.next(options); // Ensure request proceeds
       },
     ));
   }
@@ -35,8 +38,8 @@ class MedicineService {
         data: medicine.toJson(),
       );
       return response.statusCode == 200 || response.statusCode == 201;
-    } catch (e) {
-      debugPrint('Error adding medicine: $e');
+    } on DioException catch (e) {
+      debugPrint('Error adding medicine: ${e.response?.data ?? e.message}');
       return false;
     }
   }
@@ -45,15 +48,14 @@ class MedicineService {
   Future<List<MedicinePill>> getAllMedicines() async {
     try {
       final response = await _dio.get('$baseUrl/GetAll');
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200) {
         List<dynamic> data = response.data;
         return data.map((json) => MedicinePill.fromJson(json)).toList();
       }
-      return [];
-    } catch (e) {
-      debugPrint('Error getting medicines: $e');
-      return [];
+    } on DioException catch (e) {
+      debugPrint('Error getting medicines: ${e.response?.data ?? e.message}');
     }
+    return [];
   }
 
   // Delete medicine
@@ -62,8 +64,8 @@ class MedicineService {
       final response = await _dio.delete('$baseUrl/Delete/$id');
       debugPrint('Delete Response: ${response.statusCode}, ${response.data}');
       return response.statusCode == 200 || response.statusCode == 204;
-    } catch (e) {
-      debugPrint('Error deleting medicine: $e');
+    } on DioException catch (e) {
+      debugPrint('Error deleting medicine: ${e.response?.data ?? e.message}');
       return false;
     }
   }
@@ -76,8 +78,8 @@ class MedicineService {
         data: medicine.toJson(),
       );
       return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error updating medicine: $e');
+    } on DioException catch (e) {
+      debugPrint('Error updating medicine: ${e.response?.data ?? e.message}');
       return false;
     }
   }
@@ -89,10 +91,10 @@ class MedicineService {
       if (response.statusCode == 200) {
         return MedicinePill.fromJson(response.data);
       }
-      return null;
-    } catch (e) {
-      debugPrint('Error getting medicine by id: $e');
-      return null;
+    } on DioException catch (e) {
+      debugPrint(
+          'Error getting medicine by id: ${e.response?.data ?? e.message}');
     }
+    return null;
   }
 }
