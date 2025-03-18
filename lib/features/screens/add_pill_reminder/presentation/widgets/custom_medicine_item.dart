@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/model/data_medicine.dart';
+import 'package:intl/intl.dart';
 
 class CustomMedicineItem extends StatelessWidget {
   final MedicinePill data;
@@ -13,6 +15,26 @@ class CustomMedicineItem extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
+  // Fixed formatting function to handle both String and DateTime types
+  String _formatDate(dynamic dateInput) {
+    try {
+      DateTime date;
+      if (dateInput is String) {
+        date = DateTime.parse(dateInput);
+      } else if (dateInput is DateTime) {
+        date = dateInput;
+      } else {
+        return dateInput.toString();
+      }
+
+      // Use English locale for formatting
+      final formatter = DateFormat('dd MMM yyyy');
+      return formatter.format(date);
+    } catch (e) {
+      return dateInput.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +122,23 @@ class CustomMedicineItem extends StatelessWidget {
                 text: 'Pills Amount: ${data.amount}',
                 fontSize: regularFontSize,
               ),
+              SizedBox(height: spaceBetweenElements * 2),
+              // Updated date displays with English labels
+              _buildDateRow(
+                emoji: '📅',
+                label: 'Start Date:',
+                date: _formatDate(data.startDate),
+                fontSize: regularFontSize,
+                color: AppColor.primaryColor,
+              ),
+              SizedBox(height: spaceBetweenElements),
+              _buildDateRow(
+                emoji: '📅',
+                label: 'End Date:',
+                date: _formatDate(data.endDate),
+                fontSize: regularFontSize,
+                color: AppColor.textColorPrimary,
+              ),
               Padding(
                 padding:
                     EdgeInsets.symmetric(vertical: spaceBetweenElements * 2),
@@ -134,6 +173,45 @@ class CustomMedicineItem extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Improved date row with English text directionality
+  Widget _buildDateRow({
+    required String emoji,
+    required String label,
+    required String date,
+    required double fontSize,
+    required Color color,
+  }) {
+    return Row(
+      children: [
+        Text(
+          emoji,
+          style: TextStyle(fontSize: fontSize * 1.2),
+        ),
+        SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: color,
+          ),
+        ),
+        SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            date,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ],
     );
   }
 
@@ -195,11 +273,11 @@ class CustomMedicineItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 12,
-        vertical: 8,
+        vertical: 10,
       ),
       decoration: BoxDecoration(
         color: AppColor.primaryColor.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: AppColor.primaryColor.withOpacity(0.3),

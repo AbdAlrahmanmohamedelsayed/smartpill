@@ -110,10 +110,11 @@ class _EditMedicineViewState extends State<EditMedicineView> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            backgroundColor: AppColor.accentGreen),
+                            backgroundColor: AppColor.primaryColor),
                         onPressed: _updateMedication,
                         child: Text(
                           'Update',

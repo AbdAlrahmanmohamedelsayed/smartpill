@@ -36,7 +36,7 @@ class _LayoutViewState extends State<LayoutView> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withOpacity(0.2),
               offset: const Offset(0, 4),
               blurRadius: 15,
               spreadRadius: 3,
@@ -83,7 +83,7 @@ class _LayoutViewState extends State<LayoutView> {
         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
         decoration: isSelected
             ? BoxDecoration(
-                color: AppColor.primaryColor.withOpacity(0.7),
+                color: AppColor.primaryColor.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(20),
               )
             : null,

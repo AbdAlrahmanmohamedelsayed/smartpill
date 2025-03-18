@@ -230,28 +230,53 @@ class _HomeViewState extends State<HomeView> {
                             }
                           },
                           onDelete: () async {
-                            if (medicine.id != null) {
-                              bool success = await medicineProvider
-                                  .deleteMedicine(medicine.id!);
-                              print(medicine.id);
-                              if (success) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Medicine deleted successfully')),
-                                );
+                            bool confirmDelete = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Confirm Delete'),
+                                      content: const Text(
+                                          'Are you sure you want to delete this medicine?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ) ??
+                                false;
+                            if (confirmDelete) {
+                              if (medicine.id != null) {
+                                bool success = await medicineProvider
+                                    .deleteMedicine(medicine.id!);
+                                print(medicine.id);
+                                if (success) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Medicine deleted successfully')),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Failed to delete medicine')),
+                                  );
+                                }
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                      content:
-                                          Text('Failed to delete medicine')),
+                                      content: Text('Medicine ID is null')),
                                 );
                               }
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Medicine ID is null')),
-                              );
                             }
                           },
                         );
