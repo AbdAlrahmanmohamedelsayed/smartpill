@@ -11,6 +11,7 @@ class PageRoutesName {
   static const String healthMonitoring = 'HealthMonitoring';
   static const String chatTips = 'chatTips';
   static const String chatView = 'ChatView';
+  static const String chatGemini = 'chatGemini';
   static const String connectdivice = 'connctDevice';
   static const String druginteraction = 'druginteraction';
   static const String settingView = 'settingView';

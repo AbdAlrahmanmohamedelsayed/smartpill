@@ -8,6 +8,7 @@ import 'package:smartpill/features/screens/menu/HealthMonitoring/Oxygen/Oxygen_v
 import 'package:smartpill/features/screens/menu/HealthMonitoring/Temperature/tempreture_view.dart';
 import 'package:smartpill/features/screens/menu/HealthMonitoring/health_view.dart';
 import 'package:smartpill/features/screens/admin/admin_view.dart';
+import 'package:smartpill/features/screens/menu/chatTips/Gemini/chat_gemini.dart';
 import 'package:smartpill/features/screens/menu/chatTips/chat_viwe.dart';
 import 'package:smartpill/features/screens/menu/chatTips/ui/Tips.dart';
 import 'package:smartpill/features/screens/menu/configuration/configuration_view.dart';
@@ -56,6 +57,9 @@ class AppRouter {
       case PageRoutesName.chatTips:
         return MaterialPageRoute(
             builder: (context) => Tips(), settings: settings);
+      case PageRoutesName.chatGemini:
+        return MaterialPageRoute(
+            builder: (context) => ChatGemini(), settings: settings);
       case PageRoutesName.chatView:
         return MaterialPageRoute(
             builder: (context) => ChatViwe(), settings: settings);

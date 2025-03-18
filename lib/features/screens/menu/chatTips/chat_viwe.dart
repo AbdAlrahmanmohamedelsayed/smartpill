@@ -37,7 +37,9 @@ class ChatViwe extends StatelessWidget {
               width: 20,
             ),
             CardHealth(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushNamed(context, PageRoutesName.chatGemini);
+                },
                 pathImage: 'assets/images/icons/chat-tips-gim.png',
                 title: 'Gemini'),
           ],
