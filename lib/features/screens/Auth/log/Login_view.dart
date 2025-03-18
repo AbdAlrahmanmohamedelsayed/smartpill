@@ -266,7 +266,7 @@ class _LoginViewState extends State<LoginView> {
       );
       if (response.token != null) {
         await Future.delayed(const Duration(seconds: 2));
-        Navigator.pushNamed(context, PageRoutesName.layout);
+        Navigator.pushReplacementNamed(context, PageRoutesName.layout);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

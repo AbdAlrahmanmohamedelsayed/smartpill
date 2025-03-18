@@ -99,10 +99,10 @@ class _AddMedicineViewState extends State<AddMedicineView> {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(8),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            backgroundColor: AppColor.accentGreen),
+                            backgroundColor: AppColor.primaryColor),
                         onPressed: _saveMedication,
                         child: Text(
                           'Save',
