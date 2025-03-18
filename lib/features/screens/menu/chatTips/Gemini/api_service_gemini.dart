@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:smartpill/features/screens/menu/chatTips/Gemini/SymptomTips_gemini.dart';
-import 'package:smartpill/model/SymptomTips.dart';
 
 class ApiServiceGemini {
   final String baseUrl = 'http://healthcare1.runasp.net/api/Gemini';

@@ -16,8 +16,8 @@ class _LoginViewState extends State<LoginView> {
   String? users;
   bool isObscure = true;
   // bool isLoading = false;
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _passwordcontrolar = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
+  final TextEditingController _passwordcontrolar = TextEditingController();
 
   var formkey = GlobalKey<FormState>();
   @override
@@ -79,7 +79,7 @@ class _LoginViewState extends State<LoginView> {
                   cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(16),
+                    contentPadding: const EdgeInsets.all(12),
                     suffix: Icon(
                       Icons.email,
                       color: theme.primaryColor,

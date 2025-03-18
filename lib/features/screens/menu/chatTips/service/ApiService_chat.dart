@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:smartpill/model/SymptomTips.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:5000';
+  static const String baseUrl =
+      'https://flask-chatbot-production-1a6b.up.railway.app';
 
   Future<TipsResponse> getTips(String text, {int retries = 3}) async {
     Exception? lastException;
