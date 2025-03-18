@@ -1,4 +1,5 @@
 // chat_view.dart
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/menu/chatTips/service/ApiService_chat.dart';
@@ -93,19 +94,19 @@ class _ChatViewState extends State<Tips> {
         ),
       );
     } else if (_symptomTips == null || _symptomTips!.isEmpty) {
-      return const Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Text(
-                "There are no tips for this case.",
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: AppColor.primaryColor),
-              ),
-            )
+      return Center(
+        child: AnimatedTextKit(
+          animatedTexts: [
+            TypewriterAnimatedText(
+              cursor: '-',
+              'Enter your symptoms to get helpful tips Ai ',
+              textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColor.primaryColor, fontWeight: FontWeight.w600),
+              speed: const Duration(milliseconds: 80),
+            ),
           ],
+          totalRepeatCount: 1,
+          displayFullTextOnTap: true,
         ),
       );
     } else {

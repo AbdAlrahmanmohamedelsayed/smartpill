@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Graduation Project - Smart Pill',
+        title: 'Graduation Project- Smart Pill',
         theme: AppThemeManager.lightThemeManager,
         initialRoute: PageRoutesName.initial,
         onGenerateRoute: AppRouter.onGenerator,
