@@ -234,7 +234,13 @@ class _HomeViewState extends State<HomeView> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text('Confirm Delete'),
+                                      title: Text(
+                                        'Confirm Delete',
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                          color: AppColor.errorColor,
+                                        ),
+                                      ),
                                       content: const Text(
                                           'Are you sure you want to delete this medicine?'),
                                       actions: <Widget>[
