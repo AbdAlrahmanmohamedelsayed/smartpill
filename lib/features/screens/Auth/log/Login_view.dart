@@ -46,7 +46,8 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 Container(
                     alignment: Alignment.center,
-                    child: Image.asset('assets/images/Login.png')),
+                    child: Image.asset(
+                        width: media.width * 0.6, 'assets/images/Login.png')),
                 const SizedBox(
                   height: 45,
                 ),
@@ -60,6 +61,12 @@ class _LoginViewState extends State<LoginView> {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, PageRoutesName.layout);
+                    },
+                    child: Text('...........')),
                 const SizedBox(
                   height: 20,
                 ),
@@ -79,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                   cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(12),
+                    contentPadding: const EdgeInsets.all(14),
                     suffix: Icon(
                       Icons.email,
                       color: theme.primaryColor,

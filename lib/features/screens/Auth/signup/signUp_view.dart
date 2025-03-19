@@ -21,6 +21,7 @@ class _SignupViewState extends State<SignupView> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var madi = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -41,12 +42,13 @@ class _SignupViewState extends State<SignupView> {
                 FadeInDown(
                   delay: const Duration(microseconds: 400),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    width: 450,
-                    child: Image.asset(
-                      'assets/images/Sign_up.png',
-                      fit: BoxFit.cover,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 22, vertical: 12),
+                    width: madi.size.width * .8,
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/Sign_up.png',
+                      ),
                     ),
                   ),
                 ),

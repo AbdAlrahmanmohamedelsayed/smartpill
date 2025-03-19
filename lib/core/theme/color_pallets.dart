@@ -11,17 +11,14 @@ class AppColor {
   static const Color textColorHint = Color(0xff9CA3AF);
 
   // Alert & Status Colors
-  static const Color errorColor = Color(0xffEF4444); // Soft Red for errors
-  static const Color successColor =
-      accentGreen; // Mint Green for success messages
-  static const Color warningColor =
-      Color(0xffF59E0B); // Golden-Orange for warnings
+  static const Color errorColor = Color(0xffEF4444);
+  static const Color successColor = accentGreen;
+  static const Color warningColor = Color(0xffF59E0B);
 
   // Button Colors
-  static const Color buttonPrimary = primaryColor; // Primary button color
-  static const Color buttonSecondary = accentGreen; // Secondary button color
+  static const Color buttonPrimary = primaryColor;
+  static const Color buttonSecondary = accentGreen;
 
   // Border Colors
-  static const Color borderColor =
-      Color(0xffD1D5DB); // Soft border color for input fields or cards
+  static const Color borderColor = Color(0xffD1D5DB);
 }

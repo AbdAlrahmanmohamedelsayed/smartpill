@@ -234,6 +234,7 @@ class _HomeViewState extends State<HomeView> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
+                                      backgroundColor: AppColor.whiteColor,
                                       title: Text(
                                         'Confirm Delete',
                                         style: theme.textTheme.bodyMedium
