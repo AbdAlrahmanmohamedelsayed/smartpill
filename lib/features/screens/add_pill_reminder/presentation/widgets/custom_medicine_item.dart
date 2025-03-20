@@ -124,21 +124,7 @@ class CustomMedicineItem extends StatelessWidget {
               ),
               SizedBox(height: spaceBetweenElements * 2),
               // Updated date displays with English labels
-              _buildDateRow(
-                emoji: '📅',
-                label: 'Start Date:',
-                date: _formatDate(data.startDate),
-                fontSize: regularFontSize,
-                color: AppColor.primaryColor,
-              ),
-              SizedBox(height: spaceBetweenElements),
-              _buildDateRow(
-                emoji: '📅',
-                label: 'End Date:',
-                date: _formatDate(data.endDate),
-                fontSize: regularFontSize,
-                color: AppColor.textColorPrimary,
-              ),
+
               Padding(
                 padding:
                     EdgeInsets.symmetric(vertical: spaceBetweenElements * 2),

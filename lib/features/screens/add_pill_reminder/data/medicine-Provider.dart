@@ -16,6 +16,27 @@ class MedicineProvider extends ChangeNotifier {
     loadMedicines();
   }
 
+  // Get medicines filtered by date
+  List<MedicinePill> getMedicinesByDate(DateTime date) {
+    final selectedDate = DateTime(date.year, date.month, date.day);
+
+    return _medicines.where((medicine) {
+      final startDate = DateTime(
+        medicine.startDate.year,
+        medicine.startDate.month,
+        medicine.startDate.day,
+      );
+      final endDate = DateTime(
+        medicine.endDate.year,
+        medicine.endDate.month,
+        medicine.endDate.day,
+      );
+
+      return !selectedDate.isBefore(startDate) &&
+          !selectedDate.isAfter(endDate);
+    }).toList();
+  }
+
   Future<void> loadMedicines() async {
     _setLoading(true);
     try {

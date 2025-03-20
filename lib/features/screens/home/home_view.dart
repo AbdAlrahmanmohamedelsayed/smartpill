@@ -190,104 +190,171 @@ class _HomeViewState extends State<HomeView> {
                       ],
                     );
                   } else {
-                    return ListView.separated(
-                      separatorBuilder: (context, index) => const Divider(
-                        thickness: 3,
-                        endIndent: 35,
-                        indent: 35,
-                        color: AppColor.textColorHint,
-                      ),
-                      itemCount: medicineProvider.medicines.length,
-                      itemBuilder: (context, index) {
-                        final medicine = medicineProvider.medicines[index];
-                        return CustomMedicineItem(
-                          data: medicine,
-                          onEdit: () async {
-                            final updatedMedicine = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditMedicineView(medicine: medicine),
-                              ),
-                            );
+                    final filteredMedicines =
+                        medicineProvider.getMedicinesByDate(_focusDate);
 
-                            if (updatedMedicine != null) {
-                              bool success = await medicineProvider
-                                  .updateMedicine(updatedMedicine);
-                              if (success) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Medicine updated successfully')),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Failed to update medicine')),
-                                );
-                              }
-                            }
-                          },
-                          onDelete: () async {
-                            bool confirmDelete = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor: AppColor.whiteColor,
-                                      title: Text(
-                                        'Confirm Delete',
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                          color: AppColor.errorColor,
+                    if (filteredMedicines.isEmpty) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                              width: 170, 'assets/images/icons/no-drugs.png'),
+                          const SizedBox(height: 16),
+                          Text(
+                            "No medication scheduled for this date 📅",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.errorColor),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 22, vertical: 8),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.calendar_today,
+                                  color: AppColor.primaryColor),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${_focusDate.day}/${_focusDate.month}/${_focusDate.year}',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColor.primaryColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '${filteredMedicines.length} medication ToDay',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: AppColor.buttonPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) => const Divider(
+                              thickness: 3,
+                              endIndent: 35,
+                              indent: 35,
+                              color: AppColor.textColorHint,
+                            ),
+                            itemCount: filteredMedicines.length,
+                            itemBuilder: (context, index) {
+                              final medicine = filteredMedicines[index];
+                              return Column(
+                                children: [
+                                  CustomMedicineItem(
+                                    data: medicine,
+                                    onEdit: () async {
+                                      final updatedMedicine =
+                                          await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditMedicineView(
+                                                  medicine: medicine),
                                         ),
-                                      ),
-                                      content: const Text(
-                                          'Are you sure you want to delete this medicine?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(false),
-                                          child: const Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(true),
-                                          child: const Text('Delete'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ) ??
-                                false;
-                            if (confirmDelete) {
-                              if (medicine.id != null) {
-                                bool success = await medicineProvider
-                                    .deleteMedicine(medicine.id!);
-                                print(medicine.id);
-                                if (success) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Medicine deleted successfully')),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content:
-                                            Text('Failed to delete medicine')),
-                                  );
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Medicine ID is null')),
-                                );
-                              }
-                            }
-                          },
-                        );
-                      },
+                                      );
+
+                                      if (updatedMedicine != null) {
+                                        bool success = await medicineProvider
+                                            .updateMedicine(updatedMedicine);
+                                        if (success) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    'Medicine updated successfully')),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    'Failed to update medicine')),
+                                          );
+                                        }
+                                      }
+                                    },
+                                    onDelete: () async {
+                                      bool confirmDelete = await showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                backgroundColor:
+                                                    AppColor.whiteColor,
+                                                title: Text(
+                                                  'Confirm Delete',
+                                                  style: theme
+                                                      .textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                    color: AppColor.errorColor,
+                                                  ),
+                                                ),
+                                                content: const Text(
+                                                    'Are you sure you want to delete this medicine?'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(true),
+                                                    child: const Text('Delete'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ) ??
+                                          false;
+                                      if (confirmDelete) {
+                                        if (medicine.id != null) {
+                                          bool success = await medicineProvider
+                                              .deleteMedicine(medicine.id!);
+                                          print(medicine.id);
+                                          if (success) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                  content: Text(
+                                                      'Medicine deleted successfully')),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                  content: Text(
+                                                      'Failed to delete medicine')),
+                                            );
+                                          }
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content: Text(
+                                                    'Medicine ID is null')),
+                                          );
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   }
                 },
