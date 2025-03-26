@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
@@ -15,11 +13,13 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   String? users;
   bool isObscure = true;
-  // bool isLoading = false;
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontrolar = TextEditingController();
 
   var formkey = GlobalKey<FormState>();
+
+  // Extracted method to create a consistent text field style
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -61,20 +61,15 @@ class _LoginViewState extends State<LoginView> {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(
-                          context, PageRoutesName.layout);
-                    },
-                    child: Text('...........')),
                 const SizedBox(
                   height: 20,
                 ),
+                // Email TextField
                 TextFormField(
                   controller: _emailcontroller,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return "please enter your emaail";
+                      return "Please enter your email";
                     }
                     var regexp = RegExp(
                         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
@@ -84,42 +79,17 @@ class _LoginViewState extends State<LoginView> {
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
-                  style: theme.textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(14),
-                    suffix: Icon(
-                      Icons.email,
-                      color: theme.primaryColor,
-                    ),
-                    label: Text(
-                      'E-mail',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    hintText: 'enter your email ',
-                    hintStyle: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.black38),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            BorderSide(width: 2, color: theme.primaryColor)),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+                  decoration: _buildInputDecoration(
+                    context: context,
+                    labelText: 'E-mail',
+                    hintText: 'Enter your email',
+                    suffixIcon: Icons.email,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
+
                 TextFormField(
                   obscureText: isObscure,
                   controller: _passwordcontrolar,
@@ -129,50 +99,19 @@ class _LoginViewState extends State<LoginView> {
                     }
                     if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$')
                         .hasMatch(value)) {
-                      return 'Password must contain at least one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long';
+                      return 'Password must include an uppercase letter, a lowercase letter, a special character, and be at least 8 characters long.';
                     }
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
-                  style: theme.textTheme.bodySmall,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(12),
-                    suffix: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          isObscure = !isObscure;
-                        });
-                      },
-                      icon: Icon(
-                        isObscure ? Icons.visibility : Icons.visibility_off,
-                        color: theme.primaryColor,
-                      ),
-                    ),
-                    label: Text(
-                      'Password',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    ),
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+                  decoration: _buildInputDecoration(
+                    context: context,
+                    labelText: 'Password',
                     hintText: 'Enter your password',
-                    hintStyle: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.black38),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide(width: 2, color: theme.primaryColor),
-                    ),
+                    suffixIcon: Icons.lock,
+                    isPassword: true,
                   ),
                 ),
                 const SizedBox(
@@ -202,7 +141,6 @@ class _LoginViewState extends State<LoginView> {
                     if (formkey.currentState!.validate()) {
                       _Login();
                     }
-                    // Navigator.pushNamed(context, PageRoutesName.layout);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,7 +187,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  // ignore: non_constant_identifier_names
+  // Login Method
   void _Login() async {
     final email = _emailcontroller.text.trim();
     final password = _passwordcontrolar.text.trim();
@@ -257,35 +195,186 @@ class _LoginViewState extends State<LoginView> {
     try {
       final response = await ApiManagerAuth().login(email, password);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Center(
-              child: Text(
-                'Login Successful! ',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: AppColor.accentGreen),
-              ),
-            ),
-            backgroundColor: AppColor.whiteColor,
-            duration: Duration(seconds: 1)),
-      );
       if (response.token != null) {
-        await Future.delayed(const Duration(seconds: 2));
-        Navigator.pushReplacementNamed(context, PageRoutesName.layout);
+        // Show success dialog
+        _showSuccessDialog(context);
+      } else {
+        // Show failure dialog if no token is returned
+        _showFailureDialog(
+            context, 'Unable to authenticate. Please try again.');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            backgroundColor: Colors.white,
-            content: Text(
-              ' Failed to login: email or password is incorrect',
-              style: TextStyle(
-                color: AppColor.errorColor,
-              ),
-            )),
-      );
+      // Show failure dialog with error message
+      _showFailureDialog(context, 'Invalid email or password ');
     }
+  }
+
+  InputDecoration _buildInputDecoration({
+    required BuildContext context,
+    required String labelText,
+    required String hintText,
+    required IconData suffixIcon,
+    bool isPassword = false,
+  }) {
+    var theme = Theme.of(context);
+    return InputDecoration(
+      contentPadding: const EdgeInsets.all(16),
+      suffixIcon: isPassword
+          ? IconButton(
+              onPressed: () {
+                setState(() {
+                  isObscure = !isObscure;
+                });
+              },
+              icon: Icon(
+                isPassword && isObscure
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                color: theme.primaryColor,
+              ),
+            )
+          : Icon(
+              suffixIcon,
+              color: theme.primaryColor,
+            ),
+      label: Text(
+        labelText,
+        style: theme.textTheme.bodySmall?.copyWith(
+          fontSize: 20,
+          color: theme.primaryColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      hintText: hintText,
+      hintStyle: theme.textTheme.bodySmall?.copyWith(
+        fontWeight: FontWeight.w500,
+        color: Colors.black38,
+      ),
+      border: _buildOutlineBorder(theme),
+      enabledBorder: _buildOutlineBorder(theme),
+      focusedBorder: _buildOutlineBorder(theme),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: const BorderSide(width: 2, color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: const BorderSide(width: 2, color: Colors.red),
+      ),
+    );
+  }
+
+  OutlineInputBorder _buildOutlineBorder(ThemeData theme) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: BorderSide(width: 2, color: theme.primaryColor),
+    );
+  }
+
+  // Success Dialog Function
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        // Automatically navigate to home after 2 seconds
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.pushReplacementNamed(context, PageRoutesName.layout);
+        });
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: AppColor.accentGreen,
+                  size: 100,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Login Successful!',
+                  style: TextStyle(
+                    color: AppColor.primaryColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Welcome back to SmartPill',
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showFailureDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+        });
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: AppColor.errorColor,
+                  size: 100,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Login Failed',
+                  style: TextStyle(
+                    color: AppColor.errorColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  message,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

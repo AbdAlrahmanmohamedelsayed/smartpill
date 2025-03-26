@@ -41,7 +41,7 @@ class ChatViwe extends StatelessWidget {
                   Navigator.pushNamed(context, PageRoutesName.chatGemini);
                 },
                 pathImage: 'assets/images/icons/chat-tips-gim.png',
-                title: 'Gemini'),
+                title: 'Tips Plus'),
           ],
         ),
       ),
