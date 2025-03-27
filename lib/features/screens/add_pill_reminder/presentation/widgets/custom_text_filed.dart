@@ -7,15 +7,17 @@ class CustomTextFiled extends StatelessWidget {
   final TextEditingController controller;
   final bool isNumeric;
   final Function(String)? onChanged;
+  bool? isEnabled = true;
 
-  CustomTextFiled({
-    Key? key,
-    required this.label,
-    required this.hint,
-    required this.controller,
-    this.isNumeric = false,
-    this.onChanged,
-  }) : super(key: key);
+  CustomTextFiled(
+      {Key? key,
+      required this.label,
+      required this.hint,
+      required this.controller,
+      this.isNumeric = false,
+      this.onChanged,
+      this.isEnabled})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class CustomTextFiled extends StatelessWidget {
         Text(label, style: theme.textTheme.bodyMedium),
         const SizedBox(height: 5),
         TextFormField(
+          enabled: isEnabled,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 22),
           controller: controller,
           keyboardType: isNumeric ? TextInputType.number : TextInputType.text,

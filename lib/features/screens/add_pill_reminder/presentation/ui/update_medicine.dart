@@ -94,6 +94,7 @@ class _EditMedicineViewState extends State<EditMedicineView> {
                       ),
                       _buildDateField(),
                       CustomTextFiled(
+                        isEnabled: false,
                         controller: _endDateController,
                         label: 'End Date',
                         hint: 'Auto-calculated',
@@ -154,17 +155,23 @@ class _EditMedicineViewState extends State<EditMedicineView> {
 
   void _updateTimesBasedOnFirst() {
     if (_medicationTimes.isNotEmpty) {
-      TimeOfDay startTime = const TimeOfDay(hour: 8, minute: 0);
-      int interval = (15 * 60) ~/ _medicationTimes.length;
+      // Set first time to 9:00 AM if not already set
+      TimeOfDay firstTime =
+          _medicationTimes[0] ?? const TimeOfDay(hour: 9, minute: 0);
+
+      // Calculate interval between doses (15 hours / number of doses)
+      double intervalHours = 15.0 / _medicationTimes.length;
+      int intervalMinutes = (intervalHours * 60).round();
 
       setState(() {
         for (int i = 0; i < _medicationTimes.length; i++) {
-          int newMinutes =
-              (startTime.hour * 60 + startTime.minute) + (i * interval);
-          int hour = (newMinutes ~/ 60) % 24;
-          int minute = newMinutes % 60;
+          int totalMinutes =
+              firstTime.hour * 60 + firstTime.minute + (i * intervalMinutes);
+          int hour = (totalMinutes ~/ 60) % 24;
+          int minute = totalMinutes % 60;
 
-          if (hour < 23 || (hour == 23 && minute == 0)) {
+          // Ensure time doesn't go past 11:59 PM
+          if (hour < 24) {
             _medicationTimes[i] = TimeOfDay(hour: hour, minute: minute);
           }
         }
@@ -184,7 +191,10 @@ class _EditMedicineViewState extends State<EditMedicineView> {
             if (pickedTime != null) {
               setState(() {
                 _medicationTimes[index] = pickedTime;
-                if (index == 0) _updateTimesBasedOnFirst();
+                // If first time is changed, recalculate all times
+                if (index == 0) {
+                  _updateTimesBasedOnFirst();
+                }
               });
             }
           },
