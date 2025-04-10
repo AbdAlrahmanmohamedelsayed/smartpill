@@ -138,7 +138,7 @@ class _ChatGeminiState extends State<ChatGemini> {
           animatedTexts: [
             TypewriterAnimatedText(
               cursor: '-',
-              'Enter your symptoms to get helpful tips With Ai Gemini',
+              'Enter your symptoms to get helpful tips With Ai ',
               textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColor.primaryColor, fontWeight: FontWeight.w600),
               speed: const Duration(milliseconds: 80),
@@ -163,7 +163,7 @@ class _ChatGeminiState extends State<ChatGemini> {
         titleTextStyle: theme.appBarTheme.titleTextStyle
             ?.copyWith(color: AppColor.whiteColor),
         title: Text(
-          'Chat Gemini',
+          'Tips Plus',
           style: theme.textTheme.bodyMedium?.copyWith(
             color: AppColor.whiteColor,
             fontWeight: FontWeight.w800,

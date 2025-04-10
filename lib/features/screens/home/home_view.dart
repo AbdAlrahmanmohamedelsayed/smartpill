@@ -241,9 +241,9 @@ class _HomeViewState extends State<HomeView> {
                           child: ListView.separated(
                             separatorBuilder: (context, index) => const Divider(
                               thickness: 3,
-                              endIndent: 35,
-                              indent: 35,
-                              color: AppColor.textColorHint,
+                              endIndent: 40,
+                              indent: 40,
+                              color: AppColor.primaryColor,
                             ),
                             itemCount: filteredMedicines.length,
                             itemBuilder: (context, index) {

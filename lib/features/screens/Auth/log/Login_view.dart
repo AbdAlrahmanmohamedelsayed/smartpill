@@ -62,6 +62,15 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 const SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, PageRoutesName.layout);
+                    },
+                    child: Text('......')),
+                const SizedBox(
                   height: 20,
                 ),
                 // Email TextField

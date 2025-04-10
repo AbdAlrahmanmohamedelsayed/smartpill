@@ -12,7 +12,9 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   final _formKey = GlobalKey<FormState>();
-  String? users;
+  String? userType = 'user'; // Set default value to 'user'
+  bool isUserSelected = true;
+  bool isCareGiverSelected = false;
   bool isObscure = true;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -41,11 +43,11 @@ class _SignupViewState extends State<SignupView> {
               children: [
                 FadeInDown(
                   delay: const Duration(microseconds: 400),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 22, vertical: 12),
-                    width: madi.size.width * .8,
-                    child: Center(
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 22, vertical: 12),
+                      width: madi.size.width * .8,
                       child: Image.asset(
                         'assets/images/Sign_up.png',
                       ),
@@ -64,7 +66,8 @@ class _SignupViewState extends State<SignupView> {
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
-                  decoration: _inputDecoration(theme, 'Username', Icons.person),
+                  decoration: _inputDecoration(theme, 'Username', Icons.person,
+                      false, 'Enter your full name'),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -81,7 +84,8 @@ class _SignupViewState extends State<SignupView> {
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
-                  decoration: _inputDecoration(theme, 'E-mail', Icons.email),
+                  decoration: _inputDecoration(theme, 'E-mail', Icons.email,
+                      false, 'Enter your email address'),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -99,15 +103,15 @@ class _SignupViewState extends State<SignupView> {
                   },
                   cursorColor: AppColor.primaryColor,
                   style: theme.textTheme.bodySmall,
-                  decoration:
-                      _inputDecoration(theme, 'Password', Icons.lock, true),
+                  decoration: _inputDecoration(theme, 'Password', Icons.lock,
+                      true, 'Enter your secure password'),
                 ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildRadioButton('User', 'user', theme),
-                    _buildRadioButton('Doctor', 'doctor', theme),
+                    _buildCheckbox('User', theme),
+                    _buildCheckbox('Care Giver', theme),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -122,7 +126,8 @@ class _SignupViewState extends State<SignupView> {
                       backgroundColor: AppColor.buttonPrimary,
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate() && users != null) {
+                      if (_formKey.currentState!.validate() &&
+                          userType != null) {
                         _signup();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -158,16 +163,38 @@ class _SignupViewState extends State<SignupView> {
     );
   }
 
-  Widget _buildRadioButton(String title, String value, ThemeData theme) {
+  Widget _buildCheckbox(String title, ThemeData theme) {
+    bool isSelected = title == 'User' ? isUserSelected : isCareGiverSelected;
+
     return Row(
       children: [
-        Radio(
+        Checkbox(
           activeColor: theme.primaryColor,
-          value: value,
-          groupValue: users,
+          value: isSelected,
           onChanged: (val) {
             setState(() {
-              users = val;
+              if (title == 'User') {
+                isUserSelected = val ?? false;
+                if (isUserSelected) {
+                  isCareGiverSelected = false;
+                  userType = 'user';
+                } else if (!isCareGiverSelected) {
+                  // Ensure at least one option is selected
+                  isUserSelected = true;
+                  userType = 'user';
+                }
+              } else {
+                // Care Giver
+                isCareGiverSelected = val ?? false;
+                if (isCareGiverSelected) {
+                  isUserSelected = false;
+                  userType = 'caregiver';
+                } else if (!isUserSelected) {
+                  // Ensure at least one option is selected
+                  isCareGiverSelected = true;
+                  userType = 'caregiver';
+                }
+              }
             });
           },
         ),
@@ -181,7 +208,7 @@ class _SignupViewState extends State<SignupView> {
   }
 
   InputDecoration _inputDecoration(ThemeData theme, String label, IconData icon,
-      [bool isPassword = false]) {
+      bool isPassword, String hintText) {
     return InputDecoration(
       contentPadding: const EdgeInsets.all(16),
       suffixIcon: isPassword
@@ -198,7 +225,22 @@ class _SignupViewState extends State<SignupView> {
             )
           : Icon(icon, color: theme.primaryColor),
       labelText: label,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      hintText: hintText,
+      hintStyle: TextStyle(color: Colors.grey[400]),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(
+          width: 1,
+          color: theme.primaryColor,
+        ),
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: BorderSide(
+          width: 1,
+          color: theme.primaryColor,
+        ),
+      ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide(color: theme.primaryColor, width: 2),
@@ -212,7 +254,7 @@ class _SignupViewState extends State<SignupView> {
         _usernameController.text.trim(),
         _emailController.text.trim(),
         _passwordController.text.trim(),
-        users!,
+        userType!,
       );
       if (response.token != null) {
         ScaffoldMessenger.of(context).showSnackBar(
