@@ -52,16 +52,16 @@ class _MenuViewState extends State<MenuView> {
           children: [
             Container(
               padding: const EdgeInsets.all(16),
-              alignment: Alignment.bottomCenter,
-              height: media.size.height * .2,
+              alignment: Alignment.center,
+              height: media.size.height * .190,
               width: media.size.width,
               child: Row(
                 children: [
                   const CircleAvatar(
-                      radius: 30,
+                      radius: 40,
                       backgroundColor: AppColor.primaryColor,
                       child: Icon(
-                          size: 60, color: AppColor.whiteColor, Icons.person)),
+                          size: 55, color: AppColor.whiteColor, Icons.person)),
                   const SizedBox(
                     width: 15,
                   ),
@@ -111,10 +111,10 @@ class _MenuViewState extends State<MenuView> {
             ),
             CustomListtile(
               onTap: () {
-                Navigator.pushNamed(context, PageRoutesName.chatTips);
+                Navigator.pushNamed(context, PageRoutesName.chatView);
               },
               imagePath: 'assets/images/icons/advice.png',
-              tittle: 'your symptoms guide',
+              tittle: ' symptoms guide',
             ),
             const SizedBox(
               height: 12,

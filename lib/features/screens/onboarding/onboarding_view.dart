@@ -39,7 +39,8 @@ class OnboardingView extends StatelessWidget {
       background: [
         Padding(
           padding: const EdgeInsets.only(top: 45.0),
-          child: Lottie.asset(width: 250, 'assets/images/Lottie/on_1.json'),
+          child:
+              Lottie.asset(width: 250, 'assets/images/Lottie/onboarding1.json'),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 45.0),
@@ -53,8 +54,7 @@ class OnboardingView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 45.0),
-          child:
-              Lottie.asset(width: 200, 'assets/images/Lottie/onboarding4.json'),
+          child: Lottie.asset(width: 200, 'assets/images/Lottie/on_4.json'),
         ),
       ],
       speed: 1.9,
@@ -69,8 +69,8 @@ class OnboardingView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  height: 480,
+                SizedBox(
+                  height: media.size.height * 0.6,
                 ),
                 Text(
                   'Welcome to Smart Pill...',
@@ -81,7 +81,7 @@ class OnboardingView extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 20,
                 ),
                 Text(
@@ -102,8 +102,8 @@ class OnboardingView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  height: 480,
+                SizedBox(
+                  height: media.size.height * 0.6,
                 ),
                 Text(
                   'Never forget your dose again!.',
@@ -135,8 +135,8 @@ class OnboardingView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  height: 480,
+                SizedBox(
+                  height: media.size.height * 0.6,
                 ),
                 Text(
                   'Track your health easily',
@@ -168,8 +168,8 @@ class OnboardingView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                const SizedBox(
-                  height: 480,
+                SizedBox(
+                  height: media.size.height * 0.6,
                 ),
                 Text(
                   'AI-Powered Medication Tips',

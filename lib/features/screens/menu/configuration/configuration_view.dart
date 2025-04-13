@@ -43,7 +43,7 @@ class _ConfigurationViewState extends State<ConfigurationView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Pill Configuration"),
+        title: const Text("Device Configuration"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

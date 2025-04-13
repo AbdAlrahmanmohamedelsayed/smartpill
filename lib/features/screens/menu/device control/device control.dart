@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartpill/core/theme/color_pallets.dart';
-import 'package:smartpill/features/screens/menu/connect_device/custom_button.dart';
+import 'package:smartpill/features/screens/menu/device%20control/custom_button.dart';
 
 class TestView extends StatelessWidget {
   const TestView({super.key});
@@ -28,7 +28,7 @@ class TestView extends StatelessWidget {
                     imagePath: 'assets/images/icons/Reload_Medicin.png'),
                 CustomElevatedButton(
                     onPressed: () =>
-                        _sendRequest('http://192.168.4.1/moveoneangle'),
+                        _sendRequest('http://192.168.4.1/moveOneAngle'),
                     text: 'Move One Angle',
                     imagePath: 'assets/images/icons/Move_Angle.png'),
               ],
@@ -38,12 +38,12 @@ class TestView extends StatelessWidget {
               children: [
                 CustomElevatedButton(
                     onPressed: () =>
-                        _sendRequest('http:// 192.168.4.1/ReloadWithSensor'),
+                        _sendRequest('http://192.168.4.1/reloadSensor'),
                     text: 'Reload With Sensor',
                     imagePath: 'assets/images/icons/Reload_Sensor.png'),
                 CustomElevatedButton(
                     onPressed: () =>
-                        _sendRequest('http://192.168.4.1/dereleaseone'),
+                        _sendRequest('http://192.168.4.1/reloadOne'),
                     text: 'Take One pill',
                     imagePath: 'assets/images/icons/take-medicines.png')
               ],

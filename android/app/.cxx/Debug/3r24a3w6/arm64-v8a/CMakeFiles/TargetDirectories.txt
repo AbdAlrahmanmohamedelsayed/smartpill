@@ -1,0 +1,2 @@
+F:/Flutter/project_smart_pill/smartpill/android/app/.cxx/Debug/3r24a3w6/arm64-v8a/CMakeFiles/edit_cache.dir
+F:/Flutter/project_smart_pill/smartpill/android/app/.cxx/Debug/3r24a3w6/arm64-v8a/CMakeFiles/rebuild_cache.dir
