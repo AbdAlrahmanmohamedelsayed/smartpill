@@ -1,6 +1,4 @@
-أكيد! Here's the English version of your Smart Pill Dispenser README introduction, reflecting that you're using a **custom backend** instead of Firebase:
 
----
 
 ## 📱 Smart Pill Dispenser – Graduation Project
 
