@@ -1,16 +1,19 @@
-# smartpill
+أكيد! Here's the English version of your Smart Pill Dispenser README introduction, reflecting that you're using a **custom backend** instead of Firebase:
 
-A new Flutter project.
+---
 
-## Getting Started
+## 📱 Smart Pill Dispenser – Graduation Project
 
-This project is a starting point for a Flutter application.
+**Smart Pill Dispenser** is a mobile application designed to help patients—especially the elderly—manage their medication schedules efficiently and safely. The project combines **IoT technology** with a **Flutter-based mobile app** and a **custom backend** to provide a complete system for monitoring vital signs, sending timely medication reminders, and ensuring proper medication adherence.
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🎯 Project Goals:
+- Send scheduled reminders for medication intake.
+- Monitor vital signs such as oxygen level and body temperature.
+- Provide medical advice and tips based on the patient’s condition.
+- Detect potential drug interactions and notify the user.
+- Offer a user-friendly interface tailored for elderly users.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
