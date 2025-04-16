@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/menu/device%20control/custom_button.dart';
 
-class TestView extends StatelessWidget {
+class TestView extends StatefulWidget {
   const TestView({super.key});
 
+  @override
+  State<TestView> createState() => _TestViewState();
+}
+
+class _TestViewState extends State<TestView> {
+  String resMassage = '';
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -19,6 +24,10 @@ class TestView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Image.asset(width: 100, 'assets/images/logo.png'),
+            Text(
+              resMassage,
+              style: theme.textTheme.bodySmall,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -60,6 +69,10 @@ class TestView extends StatelessWidget {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         print('API Call Successful: ${response.body}');
+        setState(() {
+          resMassage = response.body;
+        });
+
         // Optionally, handle response data
       } else {
         print('API Call Failed with Status Code: ${response.statusCode}');
