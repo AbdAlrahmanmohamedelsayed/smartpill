@@ -11,28 +11,28 @@ class _ConfigurationViewState extends State<ConfigurationView> {
   List<LayerData> layers = [
     LayerData(
       medicineName: "Medicine 1",
-      totalPills: 100,
+      totalPills: 26,
       remainingPills: 50,
       selectedTone: "Default Tone",
       layerColor: Colors.red,
     ),
     LayerData(
       medicineName: "Medicine 2",
-      totalPills: 200,
+      totalPills: 26,
       remainingPills: 30,
       selectedTone: "Tone 1",
       layerColor: Colors.blueAccent,
     ),
     LayerData(
       medicineName: "Medicine 3",
-      totalPills: 150,
+      totalPills: 26,
       remainingPills: 70,
       selectedTone: "Tone 2",
       layerColor: Colors.green,
     ),
     LayerData(
       medicineName: "Medicine 4",
-      totalPills: 120,
+      totalPills: 26,
       remainingPills: 20,
       selectedTone: "Default Tone",
       layerColor: Colors.yellow,
