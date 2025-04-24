@@ -4,7 +4,7 @@ import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/model/data_medicine.dart';
 import 'package:intl/intl.dart';
 
-class CustomMedicineItem extends StatelessWidget {
+class CustomMedicineItem extends StatefulWidget {
   final MedicinePill data;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -15,6 +15,21 @@ class CustomMedicineItem extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
+  @override
+  State<CustomMedicineItem> createState() => _CustomMedicineItemState();
+}
+
+class _CustomMedicineItemState extends State<CustomMedicineItem> {
+  // Map to track checked status for each reminder time
+  late Map<TimeOfDay, bool> checkedStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize each reminder time as unchecked
+    checkedStatus = {for (var time in widget.data.reminderTimes) time: false};
+  }
 
   // Fixed formatting function to handle both String and DateTime types
   String _formatDate(dynamic dateInput) {
@@ -80,7 +95,7 @@ class CustomMedicineItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      data.name,
+                      widget.data.name,
                       style: TextStyle(
                         fontSize: titleFontSize,
                         fontWeight: FontWeight.bold,
@@ -94,14 +109,14 @@ class CustomMedicineItem extends StatelessWidget {
                   Row(
                     children: [
                       _buildActionButton(
-                        onTap: onEdit,
+                        onTap: widget.onEdit,
                         imagePath: 'assets/images/icons/edit-icon.png',
                         backgroundColor: AppColor.primaryColor.withOpacity(0.4),
                         size: actionButtonSize,
                       ),
                       SizedBox(width: screenWidth * 0.06),
                       _buildActionButton(
-                        onTap: onDelete,
+                        onTap: widget.onDelete,
                         imagePath: 'assets/images/icons/delete-icon.png',
                         backgroundColor: Colors.red.withOpacity(0.1),
                         size: actionButtonSize,
@@ -113,18 +128,16 @@ class CustomMedicineItem extends StatelessWidget {
               SizedBox(height: spaceBetweenElements * 2),
               _buildInfoRow(
                 emoji: '💊',
-                text: 'Dose: ${data.dose} mg',
+                text: 'Dose: ${widget.data.dose} mg',
                 fontSize: regularFontSize,
               ),
               SizedBox(height: spaceBetweenElements),
               _buildInfoRow(
                 emoji: '💊',
-                text: 'Pills Amount: ${data.amount}',
+                text: 'Pills Amount: ${widget.data.amount}',
                 fontSize: regularFontSize,
               ),
               SizedBox(height: spaceBetweenElements * 2),
-              // Updated date displays with English labels
-
               Padding(
                 padding:
                     EdgeInsets.symmetric(vertical: spaceBetweenElements * 2),
@@ -145,13 +158,14 @@ class CustomMedicineItem extends StatelessWidget {
               Wrap(
                 spacing: screenWidth * 0.025,
                 runSpacing: screenHeight * 0.008,
-                children: data.reminderTimes.map((time) {
+                children: widget.data.reminderTimes.map((time) {
                   final formattedTime = MaterialLocalizations.of(context)
                       .formatTimeOfDay(time, alwaysUse24HourFormat: false);
 
-                  return _buildTimeChip(
+                  return _buildTimeChipWithCheckbox(
                     text: formattedTime,
                     fontSize: regularFontSize * 0.95,
+                    time: time,
                   );
                 }).toList(),
               ),
@@ -252,32 +266,74 @@ class CustomMedicineItem extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeChip({
+  // Modified time chip with a checkbox
+  Widget _buildTimeChipWithCheckbox({
     required String text,
     required double fontSize,
+    required TimeOfDay time,
   }) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 10,
-      ),
-      decoration: BoxDecoration(
-        color: AppColor.primaryColor.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.primaryColor.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          // Toggle the checked status
+          checkedStatus[time] = !(checkedStatus[time] ?? false);
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: checkedStatus[time] == true
+              ? AppColor.accentGreen.withOpacity(0.5)
+              : AppColor.primaryColor.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.primaryColor.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Checkbox
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: AppColor.primaryColor,
+                  width: 1.5,
+                ),
+              ),
+              child: checkedStatus[time] == true
+                  ? Icon(
+                      Icons.check,
+                      size: 16,
+                      color: AppColor.primaryColor,
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 8),
+            // Time text
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                decoration: checkedStatus[time] == true
+                    ? TextDecoration.lineThrough
+                    : null,
+              ),
+            ),
+          ],
         ),
       ),
     );
