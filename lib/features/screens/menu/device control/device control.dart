@@ -36,10 +36,9 @@ class _TestViewState extends State<TestView> {
                     text: 'Reload Medicine',
                     imagePath: 'assets/images/icons/Reload_Medicin.png'),
                 CustomElevatedButton(
-                    onPressed: () =>
-                        _sendRequest('http://192.168.4.1/moveOneAngle'),
-                    text: 'Move One Angle',
-                    imagePath: 'assets/images/icons/Move_Angle.png'),
+                    onPressed: () => _sendRequest('http://192.168.4.1/Alarm'),
+                    text: 'Alarm Sound',
+                    imagePath: 'assets/images/icons/alarm_control.png'),
               ],
             ),
             Row(
