@@ -129,6 +129,16 @@ class _MenuViewState extends State<MenuView> {
             const SizedBox(
               height: 15,
             ),
+            CustomListtile(
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutesName.drugalternatives);
+              },
+              imagePath: 'assets/images/icons/pharmaceutical.png',
+              tittle: 'Drug Alternatives',
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             Divider(
               height: 4,
               thickness: 2,
