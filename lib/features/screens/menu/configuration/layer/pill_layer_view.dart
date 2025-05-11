@@ -4,11 +4,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/model/layer_model.dart';
+import 'package:http/http.dart' as http;
 
 class PillLayerScreen extends StatefulWidget {
   final LayerData layerData;
+  final int actualRemainingPills; // القيمة الفعلية من API
 
-  const PillLayerScreen({Key? key, required this.layerData}) : super(key: key);
+  const PillLayerScreen({
+    Key? key,
+    required this.layerData,
+    required this.actualRemainingPills, // إضافة بارامتر جديد
+  }) : super(key: key);
 
   @override
   _PillLayerScreenState createState() => _PillLayerScreenState();
@@ -27,8 +33,11 @@ class _PillLayerScreenState extends State<PillLayerScreen> {
     super.initState();
     _medicineNameController =
         TextEditingController(text: widget.layerData.medicineName);
+
+    // استخدام القيمة الفعلية من API بدلاً من القيمة الموجودة في layerData
     _remainingPillsController =
-        TextEditingController(text: widget.layerData.remainingPills.toString());
+        TextEditingController(text: widget.actualRemainingPills.toString());
+
     _totalPillsController =
         TextEditingController(text: widget.layerData.totalPills.toString());
     selectedTone = widget.layerData.selectedTone;
@@ -132,20 +141,20 @@ class _PillLayerScreenState extends State<PillLayerScreen> {
                       style: theme.textTheme.bodyMedium,
                     )),
                 DropdownMenuItem(
-                    value: "Tone 1",
+                    value: "1",
                     child: Text(
                       "Tone 1",
                       style: theme.textTheme.bodySmall,
                     )),
                 DropdownMenuItem(
-                  value: "Tone 2",
+                  value: "2",
                   child: Text(
                     "Tone 2",
                     style: theme.textTheme.bodySmall,
                   ),
                 ),
                 DropdownMenuItem(
-                  value: "Tone 3",
+                  value: "3",
                   child: Text(
                     "Tone 3",
                     style: theme.textTheme.bodySmall,
@@ -186,6 +195,7 @@ class _PillLayerScreenState extends State<PillLayerScreen> {
               height: 10,
             ),
             TextField(
+              // readOnly: true,
               style: theme.textTheme.bodyMedium,
               controller: _totalPillsController,
               keyboardType: TextInputType.number,
@@ -208,6 +218,7 @@ class _PillLayerScreenState extends State<PillLayerScreen> {
                 setState(() {
                   _remainingPillsController.text = _totalPillsController.text;
                 });
+                _sendRequest('http://192.168.4.1/reloadSensor');
               },
               icon: const Icon(
                 Icons.refresh,
@@ -238,7 +249,8 @@ class _PillLayerScreenState extends State<PillLayerScreen> {
                   layerColor: layerColor,
                   medicineImage: _medicineImage,
                 );
-
+                _sendRequest(
+                    'http://192.168.4.1/setMedicineName?name=${_medicineNameController.text}&tone=$selectedTone');
                 Navigator.pop(context, updatedLayer);
               },
               icon: const Icon(
@@ -256,5 +268,20 @@ class _PillLayerScreenState extends State<PillLayerScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendRequest(String endpoint) async {
+    final url = Uri.parse(endpoint);
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('API Call Successful: ${response.body}');
+        // Optionally, handle response data
+      } else {
+        print('API Call Failed with Status Code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred during API call: $e');
+    }
   }
 }

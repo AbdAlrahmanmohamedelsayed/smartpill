@@ -45,8 +45,8 @@ class _HealthViewState extends State<HealthView> {
                 onTap: () {
                   Navigator.pushNamed(context, PageRoutesName.oxygenPage);
                 },
-                pathImage: 'assets/images/icons/oxygen-saturation.png',
-                title: 'Oxygen ',
+                pathImage: 'assets/images/icons/oximeter_6164918.png',
+                title: 'Oximeter ',
               ),
               CardHealth(
                 onTap: () {
