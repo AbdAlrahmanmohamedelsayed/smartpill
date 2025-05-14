@@ -40,7 +40,7 @@ class _SplashviewState extends State<Splashview> {
               FadeInDown(
                 child: Image.asset(
                   'assets/images/logo.png',
-                  width: 120,
+                  width: 180,
                 ),
               ),
               const SizedBox(height: 20),
@@ -49,9 +49,8 @@ class _SplashviewState extends State<Splashview> {
                 child: Text(
                   'Smart Pill',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.accentGreen,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.primaryColor),
                 ),
               ),
             ],
