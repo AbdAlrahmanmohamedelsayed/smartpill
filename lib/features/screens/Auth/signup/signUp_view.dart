@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:smartpill/core/config/page_routes_name.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/features/screens/Auth/service/api_Manager_Auth.dart';
 
@@ -35,7 +36,7 @@ class _SignupViewState extends State<SignupView> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -55,6 +56,7 @@ class _SignupViewState extends State<SignupView> {
                   ),
                 ),
                 TextFormField(
+                  style: theme.textTheme.bodySmall,
                   controller: _usernameController,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -71,6 +73,7 @@ class _SignupViewState extends State<SignupView> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  style: theme.textTheme.bodySmall,
                   controller: _emailController,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -89,6 +92,7 @@ class _SignupViewState extends State<SignupView> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  style: theme.textTheme.bodySmall,
                   obscureText: isObscure,
                   controller: _passwordController,
                   validator: (value) {
@@ -102,7 +106,6 @@ class _SignupViewState extends State<SignupView> {
                     return null;
                   },
                   cursorColor: AppColor.primaryColor,
-                  style: theme.textTheme.bodySmall,
                   decoration: _inputDecoration(theme, 'Password', Icons.lock,
                       true, 'Enter your secure password'),
                 ),
@@ -210,7 +213,7 @@ class _SignupViewState extends State<SignupView> {
   InputDecoration _inputDecoration(ThemeData theme, String label, IconData icon,
       bool isPassword, String hintText) {
     return InputDecoration(
-      contentPadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.all(12),
       suffixIcon: isPassword
           ? IconButton(
               onPressed: () {
@@ -225,24 +228,29 @@ class _SignupViewState extends State<SignupView> {
             )
           : Icon(icon, color: theme.primaryColor),
       labelText: label,
+      labelStyle: theme.textTheme.bodySmall?.copyWith(
+        color: AppColor.textColorPrimary,
+      ),
       hintText: hintText,
-      hintStyle: TextStyle(color: Colors.grey[400]),
+      hintStyle: theme.textTheme.bodySmall?.copyWith(
+        color: AppColor.textColorHint,
+      ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
           width: 1,
           color: theme.primaryColor,
         ),
       ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(
           width: 1,
           color: theme.primaryColor,
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: theme.primaryColor, width: 2),
       ),
     );
@@ -256,25 +264,135 @@ class _SignupViewState extends State<SignupView> {
         _passwordController.text.trim(),
         userType!,
       );
+
       if (response.token != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text("Sign-up successful!",
-                  style: TextStyle(color: AppColor.accentGreen)),
-              backgroundColor: Colors.white),
-        );
-        Navigator.pop(context);
+        // Show success dialog
+        _showSignupSuccessDialog(context, userType);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Sign Up failed",
-                style: TextStyle(color: AppColor.errorColor)),
-            backgroundColor: Colors.white));
+        _showSignupFailureDialog(context, "Sign Up failed");
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Failed to Sign Up: ${e.toString()}",
-              style: TextStyle(color: AppColor.errorColor)),
-          backgroundColor: Colors.white));
+      _showSignupFailureDialog(context, "Failed to Sign Up: ${e.toString()}");
     }
+  }
+
+  void _showSignupSuccessDialog(BuildContext context, String? userType) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 1), () {
+          if (userType == "user") {
+            Navigator.pushNamedAndRemoveUntil(
+                context, PageRoutesName.layout, (route) => false);
+          } else if (userType == "admin") {
+            Navigator.pushNamedAndRemoveUntil(
+                context, PageRoutesName.admin, (route) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+                context, PageRoutesName.layout, (route) => false);
+          }
+        });
+
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: AppColor.accentGreen,
+                  size: 100,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Registration Successful!',
+                  style: TextStyle(
+                    color: AppColor.primaryColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Welcome to SmartPill',
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSignupFailureDialog(BuildContext context, String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error,
+                  color: AppColor.errorColor,
+                  size: 100,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Registration Failed',
+                  style: TextStyle(
+                    color: AppColor.primaryColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Failed to register. Please try again later.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Try Again',
+                    style: TextStyle(
+                      color: AppColor.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

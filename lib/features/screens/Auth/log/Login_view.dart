@@ -205,15 +205,14 @@ class _LoginViewState extends State<LoginView> {
       final response = await ApiManagerAuth().login(email, password);
 
       if (response.token != null) {
-        // Show success dialog
-        _showSuccessDialog(context);
+        final userRole = response.role;
+
+        _showSuccessDialog(context, userRole);
       } else {
-        // Show failure dialog if no token is returned
         _showFailureDialog(
             context, 'Unable to authenticate. Please try again.');
       }
     } catch (e) {
-      // Show failure dialog with error message
       _showFailureDialog(context, 'Invalid email or password ');
     }
   }
@@ -281,14 +280,22 @@ class _LoginViewState extends State<LoginView> {
   }
 
   // Success Dialog Function
-  void _showSuccessDialog(BuildContext context) {
+  void _showSuccessDialog(BuildContext context, String? userRole) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        // Automatically navigate to home after 2 seconds
+        // Automatically navigate based on role after 1 second
         Future.delayed(Duration(seconds: 1), () {
-          Navigator.pushReplacementNamed(context, PageRoutesName.layout);
+          if (userRole == "user") {
+            Navigator.pushReplacementNamed(context, PageRoutesName.layout);
+          } else if (userRole == "admin") {
+            // Navigate to admin layout
+            Navigator.pushReplacementNamed(context, PageRoutesName.admin);
+          } else {
+            // Default navigation if role is null or unrecognized
+            Navigator.pushReplacementNamed(context, PageRoutesName.layout);
+          }
         });
 
         return Dialog(
