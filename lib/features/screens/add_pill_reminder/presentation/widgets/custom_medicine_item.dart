@@ -1,8 +1,11 @@
-import 'package:dio/dio.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
 import 'package:smartpill/model/data_medicine.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:just_audio/just_audio.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class CustomMedicineItem extends StatefulWidget {
   final MedicinePill data;
@@ -21,17 +24,207 @@ class CustomMedicineItem extends StatefulWidget {
 }
 
 class _CustomMedicineItemState extends State<CustomMedicineItem> {
-  // Map to track checked status for each reminder time
   late Map<TimeOfDay, bool> checkedStatus;
+  List<Timer> _alarmTimers = [];
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  String? resMassage;
+  bool _isAlarmPlaying = false;
+  bool _useFallbackPlayer = false;
 
   @override
   void initState() {
     super.initState();
-    // Initialize each reminder time as unchecked
     checkedStatus = {for (var time in widget.data.reminderTimes) time: false};
+    _initAudioPlayer();
+    _scheduleAlarms();
+    _audioPlayer.playerStateStream.listen((state) {
+      setState(() {
+        _isAlarmPlaying = state.playing;
+        print(
+            'Audio player state: ${state.processingState}, playing: ${state.playing}');
+      });
+    });
   }
 
-  // Fixed formatting function to handle both String and DateTime types
+  Future<void> _initAudioPlayer() async {
+    try {
+      print('Initializing audio player...');
+      await _audioPlayer.setLoopMode(LoopMode.one);
+      await _audioPlayer.setAsset('assets/sounds/alarm.mp3');
+      await _audioPlayer.setVolume(1.0);
+      print('Audio player initialized successfully');
+    } catch (e) {
+      print('Error initializing audio player: $e');
+      setState(() {
+        _useFallbackPlayer = true;
+      });
+    }
+  }
+
+  void _scheduleAlarms() {
+    // Cancel any existing timers to avoid duplicates
+    _cancelAlarms();
+
+    final now = DateTime.now();
+    for (var time in widget.data.reminderTimes) {
+      if (_isTimeChecked(time)) continue; // Skip already checked times
+
+      // Convert TimeOfDay to DateTime for today
+      DateTime alarmTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        time.hour,
+        time.minute,
+      );
+
+      // If the time is in the past, schedule for tomorrow
+      if (alarmTime.isBefore(now)) {
+        alarmTime = alarmTime.add(const Duration(days: 1));
+      }
+
+      // Calculate duration until the alarm
+      final duration = alarmTime.difference(now);
+
+      print('Scheduling alarm for $time in ${duration.inSeconds} seconds');
+
+      // Schedule the timer
+      Timer timer = Timer(duration, () {
+        if (mounted && !_isTimeChecked(time)) {
+          _triggerAlarm(time);
+          // Reschedule for the next day
+          _scheduleAlarms();
+        }
+      });
+
+      _alarmTimers.add(timer);
+    }
+  }
+
+  void _cancelAlarms() {
+    for (var timer in _alarmTimers) {
+      timer.cancel();
+    }
+    _alarmTimers.clear();
+  }
+
+  bool _isTimeChecked(TimeOfDay time) {
+    return checkedStatus[time] ?? false;
+  }
+
+  void _triggerAlarm(TimeOfDay time) {
+    print('Triggering alarm for time: $time');
+    _playAlarmSound();
+    _showMedicationDetailsDialog(time);
+  }
+
+  Future<void> _playAlarmSound() async {
+    if (_isAlarmPlaying) {
+      print('Alarm is already playing, skipping...');
+      return;
+    }
+
+    if (_useFallbackPlayer) {
+      try {
+        print('Using fallback player (flutter_ringtone_player)...');
+        await FlutterRingtonePlayer().play(
+          android: AndroidSounds.alarm,
+          ios: IosSounds.alarm,
+          looping: true,
+          volume: 1.0,
+          asAlarm: true,
+        );
+        setState(() {
+          _isAlarmPlaying = true;
+        });
+        print('Fallback alarm sound playing.');
+      } catch (e) {
+        print('Error playing fallback sound: $e');
+      }
+      return;
+    }
+
+    try {
+      print('Attempting to play alarm sound with just_audio...');
+      await _audioPlayer.seek(Duration.zero);
+      await _audioPlayer.play();
+      print('Alarm sound should be playing now.');
+    } catch (e) {
+      print('Error playing sound: $e');
+      print('Retrying with re-initialization...');
+      await _initAudioPlayer();
+      try {
+        await _audioPlayer.play();
+        print('Retry playing sound succeeded.');
+      } catch (retryError) {
+        print('Retry playing sound failed: $retryError');
+        setState(() {
+          _useFallbackPlayer = true;
+        });
+        await _playAlarmSound();
+      }
+    }
+  }
+
+  Future<void> _stopAlarmSound() async {
+    try {
+      print('Stopping alarm sound...');
+      if (_useFallbackPlayer) {
+        await FlutterRingtonePlayer().stop();
+        print('Fallback alarm sound stopped.');
+      } else {
+        await _audioPlayer.pause();
+        print('Just_audio alarm sound paused.');
+      }
+      setState(() {
+        _isAlarmPlaying = false;
+      });
+    } catch (e) {
+      print('Error stopping sound: $e');
+    }
+  }
+
+  Future<void> _sendRequest(String endpoint) async {
+    final url = Uri.parse(endpoint);
+    try {
+      print('Sending API request to: $endpoint');
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('API call successful: ${response.body}');
+        setState(() {
+          resMassage = response.body;
+        });
+        await Future.delayed(const Duration(milliseconds: 500));
+        await _sendDeviceSoundRequest();
+      } else {
+        print('API call failed with status code: ${response.statusCode}');
+        setState(() {
+          resMassage = 'Failed: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      print('Error occurred during API call: $e');
+      setState(() {
+        resMassage = 'Error: $e';
+      });
+    }
+  }
+
+  Future<void> _sendDeviceSoundRequest() async {
+    final url = Uri.parse('http://192.168.4.1/PlaySound');
+    try {
+      print('Sending sound request to device...');
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('Sound request successful: ${response.body}');
+      } else {
+        print('Sound request failed with status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending sound request: $e');
+    }
+  }
+
   String _formatDate(dynamic dateInput) {
     try {
       DateTime date;
@@ -42,8 +235,6 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
       } else {
         return dateInput.toString();
       }
-
-      // Use English locale for formatting
       final formatter = DateFormat('dd MMM yyyy');
       return formatter.format(date);
     } catch (e) {
@@ -51,9 +242,191 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
     }
   }
 
+  void _showMedicationDetailsDialog(TimeOfDay time) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog.fullscreen(
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.06),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.notification_important,
+                        color: AppColor.primaryColor, size: 32),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Medication Reminder',
+                        style: TextStyle(
+                          color: AppColor.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width * 0.06,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon:
+                          Icon(Icons.close, color: Colors.grey[700], size: 32),
+                      onPressed: () {
+                        _stopAlarmSound();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                const Divider(),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                _buildDetailRow(
+                    icon: Icons.medication,
+                    label: 'Medication:',
+                    value: widget.data.name,
+                    fontSize: MediaQuery.of(context).size.width * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                _buildDetailRow(
+                    icon: Icons.medical_information,
+                    label: 'Dose:',
+                    value: '${widget.data.dose} mg',
+                    fontSize: MediaQuery.of(context).size.width * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                _buildDetailRow(
+                  icon: Icons.watch_later,
+                  label: 'Time:',
+                  value:
+                      MaterialLocalizations.of(context).formatTimeOfDay(time),
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+                _buildDetailRow(
+                    icon: Icons.medical_services,
+                    label: 'Pills:',
+                    value: '${widget.data.amount}',
+                    fontSize: MediaQuery.of(context).size.width * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: AppColor.accentGreen,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            checkedStatus[time] = true;
+                          });
+                          _stopAlarmSound();
+                          await _sendRequest('http://192.168.4.1/Alarm');
+                          Navigator.of(context).pop();
+                          if (resMassage != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('API Response: $resMassage'),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                          _scheduleAlarms(); // Reschedule after marking as taken
+                        },
+                        child: Text(
+                          'Mark as Taken',
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.045,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                    Expanded(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              AppColor.primaryColor.withOpacity(0.7),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          final now = DateTime.now();
+                          final laterTime = TimeOfDay(
+                            hour: (now.hour + ((now.minute + 15) ~/ 60)) % 24,
+                            minute: (now.minute + 15) % 60,
+                          );
+                          setState(() {
+                            widget.data.reminderTimes.add(laterTime);
+                            checkedStatus[laterTime] = false;
+                          });
+                          _stopAlarmSound();
+                          Navigator.of(context).pop();
+                          _scheduleAlarms(); // Reschedule after snoozing
+                        },
+                        child: Text(
+                          'Snooze 15 min',
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.045,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required double fontSize,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, color: AppColor.primaryColor, size: fontSize * 1.2),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: fontSize,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: fontSize,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -114,7 +487,7 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
                         backgroundColor: AppColor.primaryColor.withOpacity(0.4),
                         size: actionButtonSize,
                       ),
-                      SizedBox(width: screenWidth * 0.06),
+                      SizedBox(width: screenWidth * 0.03),
                       _buildActionButton(
                         onTap: widget.onDelete,
                         imagePath: 'assets/images/icons/delete-icon.png',
@@ -161,8 +534,7 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
                 children: widget.data.reminderTimes.map((time) {
                   final formattedTime = MaterialLocalizations.of(context)
                       .formatTimeOfDay(time, alwaysUse24HourFormat: false);
-
-                  return _buildTimeChipWithCheckbox(
+                  return _buildTimeChipWithAlarm(
                     text: formattedTime,
                     fontSize: regularFontSize * 0.95,
                     time: time,
@@ -173,45 +545,6 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
           ),
         ),
       ),
-    );
-  }
-
-  // Improved date row with English text directionality
-  Widget _buildDateRow({
-    required String emoji,
-    required String label,
-    required String date,
-    required double fontSize,
-    required Color color,
-  }) {
-    return Row(
-      children: [
-        Text(
-          emoji,
-          style: TextStyle(fontSize: fontSize * 1.2),
-        ),
-        SizedBox(width: 8),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.w500,
-            color: color,
-          ),
-        ),
-        SizedBox(width: 4),
-        Expanded(
-          child: Text(
-            date,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-            textAlign: TextAlign.right,
-          ),
-        ),
-      ],
     );
   }
 
@@ -246,6 +579,7 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
     required String imagePath,
     required Color backgroundColor,
     required double size,
+    IconData? fallbackIcon,
   }) {
     return InkWell(
       onTap: onTap,
@@ -256,86 +590,107 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
           color: backgroundColor,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Image.asset(
-          imagePath,
-          width: size,
-          height: size,
-          fit: BoxFit.contain,
+        child: fallbackIcon != null
+            ? Icon(
+                fallbackIcon,
+                color: Colors.white,
+                size: size * 0.6,
+              )
+            : Image.asset(
+                imagePath,
+                width: size,
+                height: size,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.error,
+                    color: Colors.white,
+                    size: size * 0.6,
+                  );
+                },
+              ),
+      ),
+    );
+  }
+
+  Widget _buildTimeChipWithAlarm({
+    required String text,
+    required double fontSize,
+    required TimeOfDay time,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            checkedStatus[time] = !(checkedStatus[time] ?? false);
+            _scheduleAlarms(); // Reschedule when manually checking/unchecking
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 8,
+          ),
+          decoration: BoxDecoration(
+            color: checkedStatus[time] == true
+                ? AppColor.accentGreen.withOpacity(0.5)
+                : AppColor.primaryColor.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.primaryColor.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: AppColor.primaryColor,
+                    width: 1.5,
+                  ),
+                ),
+                child: checkedStatus[time] == true
+                    ? Icon(
+                        Icons.check,
+                        size: 16,
+                        color: AppColor.primaryColor,
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  decoration: checkedStatus[time] == true
+                      ? TextDecoration.lineThrough
+                      : null,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Modified time chip with a checkbox
-  Widget _buildTimeChipWithCheckbox({
-    required String text,
-    required double fontSize,
-    required TimeOfDay time,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          // Toggle the checked status
-          checkedStatus[time] = !(checkedStatus[time] ?? false);
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 8,
-        ),
-        decoration: BoxDecoration(
-          color: checkedStatus[time] == true
-              ? AppColor.accentGreen.withOpacity(0.5)
-              : AppColor.primaryColor.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.primaryColor.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Checkbox
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(
-                  color: AppColor.primaryColor,
-                  width: 1.5,
-                ),
-              ),
-              child: checkedStatus[time] == true
-                  ? Icon(
-                      Icons.check,
-                      size: 16,
-                      color: AppColor.primaryColor,
-                    )
-                  : null,
-            ),
-            const SizedBox(width: 8),
-            // Time text
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                decoration: checkedStatus[time] == true
-                    ? TextDecoration.lineThrough
-                    : null,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _cancelAlarms();
+    _audioPlayer.dispose();
+    FlutterRingtonePlayer().stop();
+    super.dispose();
   }
 }
