@@ -36,7 +36,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
     super.initState();
     _imagePulseController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
   }
 
@@ -48,199 +48,185 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: 1.0,
-      duration: Duration(milliseconds: 300),
-      child: Dialog.fullscreen(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColor.primaryColor.withOpacity(0.9),
-                Colors.amber[700]!.withOpacity(0.7), // Gold color
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: SafeArea(
-            child: Stack(
-              children: [
-                // Glassmorphic overlay
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    backgroundBlendMode: BlendMode.overlay,
-                  ),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Dialog.fullscreen(
+      child: Container(
+        color: AppColor.whiteColor,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              // Main content
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.06,
+                  vertical: screenHeight * 0.04,
                 ),
-                // Close button at top-right
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.width * 0.04),
-                    child: Semantics(
-                      label: 'Close medication reminder',
-                      child: IconButton(
-                        icon: Icon(Icons.close, color: Colors.white, size: 32),
-                        onPressed: () {
-                          widget.stopAlarmSound();
-                          Navigator.of(context).pop();
-                        },
-                        tooltip: 'Dismiss Alarm',
-                        splashRadius: 24,
-                      ),
-                    ),
-                  ),
-                ),
-                // Main content
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05,
-                    vertical: MediaQuery.of(context).size.height * 0.02,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Header
-                      Text(
-                        'Medication Reminder',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontSize: MediaQuery.of(context).size.width *
-                              0.06, // Smaller title
-                          shadows: [
-                            Shadow(
-                              blurRadius: 6,
-                              color: Colors.black.withOpacity(0.4),
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      // Medication image with pulse animation
-                      Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: ScaleTransition(
-                            scale: Tween(begin: 1.0, end: 1.15)
-                                .animate(_imagePulseController),
-                            child: Image.asset(
-                              'assets/images/icons/medicine_icon.png',
-                              width: MediaQuery.of(context).size.width * 0.24,
-                              height: MediaQuery.of(context).size.width * 0.24,
-                              fit: BoxFit.contain,
-                              semanticLabel: 'Medication Reminder Icon',
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(
-                                Icons.medication,
-                                color: Colors.white,
-                                size: MediaQuery.of(context).size.width * 0.2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Header
+                    Column(
+                      children: [
+                        Text(
+                          'Medication Reminder',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColor.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenWidth * 0.05,
+                            letterSpacing: 0.5,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 8,
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(0, 2),
                               ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        // Close button
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Semantics(
+                            label: 'Close medication reminder',
+                            child: IconButton(
+                              icon: const Icon(Icons.close,
+                                  color: AppColor.primaryColor, size: 28),
+                              onPressed: () {
+                                widget.stopAlarmSound();
+                                Navigator.of(context).pop();
+                              },
+                              tooltip: 'Dismiss Alarm',
+                              splashRadius: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Image
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: ScaleTransition(
+                          scale: Tween(begin: 1.0, end: 1.1).animate(
+                            CurvedAnimation(
+                              parent: _imagePulseController,
+                              curve: Curves.easeInOut,
+                            ),
+                          ),
+                          child: Image.asset(
+                            'assets/images/icons/medicine_icon.png',
+                            width: screenWidth * 0.5,
+                            height: screenWidth * 0.5,
+                            fit: BoxFit.contain,
+                            semanticLabel: 'Medication Reminder Icon',
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.medication,
+                              color: AppColor.primaryColor,
+                              size: screenWidth * 0.25,
                             ),
                           ),
                         ),
                       ),
-                      // Medication details (horizontal distribution)
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _buildDetailColumn(
-                              label: '💊 Medication:',
-                              value: widget.data.name,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                              textColor: Colors.white,
-                            ),
-                            _buildDetailColumn(
-                              label: '💊 Dose:',
-                              value: '${widget.data.dose} mg',
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                              textColor: Colors.white,
-                            ),
-                            _buildDetailColumn(
-                              label: 'Time:',
-                              value: MaterialLocalizations.of(context)
-                                  .formatTimeOfDay(widget.time),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                              textColor: Colors.white,
-                            ),
-                            _buildDetailColumn(
-                              label: 'Pills:',
-                              value: '${widget.data.amount}',
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.04,
-                              textColor: Colors.white,
-                            ),
-                          ],
-                        ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    // Medication details in a grid
+                    Expanded(
+                      flex: 3,
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1.6,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          _buildDetailCard(
+                            label: '💊 Medication',
+                            value: widget.data.name,
+                            fontSize: screenWidth * 0.04,
+                          ),
+                          _buildDetailCard(
+                            label: '💊 Dose',
+                            value: '${widget.data.dose} mg',
+                            fontSize: screenWidth * 0.04,
+                          ),
+                          _buildDetailCard(
+                            label: 'Time',
+                            value: MaterialLocalizations.of(context)
+                                .formatTimeOfDay(widget.time),
+                            fontSize: screenWidth * 0.04,
+                          ),
+                          _buildDetailCard(
+                            label: 'Pills',
+                            value: '${widget.data.amount}',
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ],
                       ),
-                      // Action buttons
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _buildAnimatedButton(
-                              icon: Icons.check_circle,
-                              label: 'Taken',
-                              color: Colors.amber[700]!, // Gold color
-                              onPressed: () async {
-                                setState(() {
-                                  widget.checkedStatus[widget.time] = true;
-                                });
-                                widget.stopAlarmSound();
-                                await widget
-                                    .sendRequest('http://192.168.4.1/Alarm');
-                                Navigator.of(context).pop();
-                                if (widget.resMassage != null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          'API Response: ${widget.resMassage}'),
-                                      duration: const Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-                                widget.scheduleAlarms();
-                              },
-                            ),
-                            _buildAnimatedButton(
-                              icon: Icons.snooze,
-                              label: 'Snooze',
-                              color: AppColor.primaryColor,
-                              onPressed: () {
-                                final now = DateTime.now();
-                                final laterTime = TimeOfDay(
-                                  hour: (now.hour + ((now.minute + 15) ~/ 60)) %
-                                      24,
-                                  minute: (now.minute + 15) % 60,
+                    ),
+                    // Action buttons
+                    Padding(
+                      padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildAnimatedButton(
+                            icon: Icons.check_circle,
+                            label: 'Taken',
+                            color: Colors.amber[600]!,
+                            onPressed: () async {
+                              setState(() {
+                                widget.checkedStatus[widget.time] = true;
+                              });
+                              widget.stopAlarmSound();
+                              await widget
+                                  .sendRequest('http://192.168.4.1/Alarm');
+                              Navigator.of(context).pop();
+                              if (widget.resMassage != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'API Response: ${widget.resMassage}'),
+                                    duration: const Duration(seconds: 2),
+                                  ),
                                 );
-                                setState(() {
-                                  widget.data.reminderTimes.add(laterTime);
-                                  widget.checkedStatus[laterTime] = false;
-                                });
-                                widget.stopAlarmSound();
-                                Navigator.of(context).pop();
-                                widget.scheduleAlarms();
-                              },
-                            ),
-                          ],
-                        ),
+                              }
+                              widget.scheduleAlarms();
+                            },
+                          ),
+                          _buildAnimatedButton(
+                            icon: Icons.snooze,
+                            label: 'Snooze',
+                            color: AppColor.primaryColor,
+                            onPressed: () {
+                              final now = DateTime.now();
+                              final laterTime = TimeOfDay(
+                                hour:
+                                    (now.hour + ((now.minute + 15) ~/ 60)) % 24,
+                                minute: (now.minute + 15) % 60,
+                              );
+                              setState(() {
+                                widget.data.reminderTimes.add(laterTime);
+                                widget.checkedStatus[laterTime] = false;
+                              });
+                              widget.stopAlarmSound();
+                              Navigator.of(context).pop();
+                              widget.scheduleAlarms();
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -253,107 +239,62 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
     required Color color,
     required VoidCallback onPressed,
   }) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        bool _isTapped = false;
-        return GestureDetector(
-          onTapDown: (_) => setState(() => _isTapped = true),
-          onTapUp: (_) {
-            setState(() => _isTapped = false);
-            onPressed();
-          },
-          onTapCancel: () => setState(() => _isTapped = false),
-          child: AnimatedScale(
-            scale: _isTapped ? 0.92 : 1.0,
-            duration: Duration(milliseconds: 150),
-            child: Container(
-              width: MediaQuery.of(context).size.width *
-                  0.35, // Smaller button width
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.9),
-                    Colors.white.withOpacity(0.6)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.1),
-                    blurRadius: 3,
-                    offset: Offset(-1, -1),
-                  ),
-                ],
-              ),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: color,
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.015,
-                    horizontal: MediaQuery.of(context).size.width * 0.03,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                  shadowColor: Colors.transparent,
-                ),
-                icon: Icon(
-                  icon,
-                  size: 20, // Smaller icon
-                  color: color,
-                ),
-                label: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width *
-                        0.035, // Smaller text
-                    fontWeight: FontWeight.w700,
-                    color: color,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                onPressed: () {}, // Handled by GestureDetector
-              ),
-            ),
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.42,
+      decoration: BoxDecoration(
+        color: AppColor.whiteColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColor.primaryColor.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 7,
+            offset: const Offset(0, 4),
           ),
-        );
-      },
+        ],
+      ),
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColor.whiteColor,
+          foregroundColor: color,
+          padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).size.height * 0.02,
+            horizontal: MediaQuery.of(context).size.width * 0.04,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+        ),
+        icon: Icon(icon, size: 24, color: color),
+        label: Text(
+          label,
+          style: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.04,
+            fontWeight: FontWeight.w600,
+            color: color,
+          ),
+        ),
+        onPressed: onPressed,
+      ),
     );
   }
 
-  Widget _buildDetailColumn({
+  Widget _buildDetailCard({
     required String label,
     required String value,
     required double fontSize,
-    Color textColor = Colors.black,
   }) {
     return Container(
-      width: MediaQuery.of(context).size.width *
-          0.22, // Compact width for horizontal layout
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(10),
+        color: AppColor.whiteColor,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: Offset(0, 3),
-            spreadRadius: 1,
-          ),
-          BoxShadow(
-            color: Colors.white.withOpacity(0.05),
-            blurRadius: 4,
-            offset: Offset(-1, -1),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -364,20 +305,20 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
           Text(
             label,
             style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: fontSize * 0.85,
-              color: textColor,
-              letterSpacing: 0.5,
+              fontWeight: FontWeight.w700,
+              fontSize: fontSize * 0.9,
+              color: AppColor.primaryColor,
+              letterSpacing: 0.3,
             ),
             semanticsLabel: label.replaceFirst('💊 ', ''),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             value,
             style: TextStyle(
               fontSize: fontSize,
-              color: textColor.withOpacity(0.9),
-              fontWeight: FontWeight.w400,
+              color: AppColor.primaryColor.withOpacity(0.9),
+              fontWeight: FontWeight.w500,
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
