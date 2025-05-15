@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smartpill/core/theme/color_pallets.dart';
+import 'package:smartpill/features/screens/add_pill_reminder/presentation/widgets/medicine_reminder.dart';
 import 'package:smartpill/model/data_medicine.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -62,14 +63,12 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
   }
 
   void _scheduleAlarms() {
-    // Cancel any existing timers to avoid duplicates
     _cancelAlarms();
 
     final now = DateTime.now();
     for (var time in widget.data.reminderTimes) {
-      if (_isTimeChecked(time)) continue; // Skip already checked times
+      if (_isTimeChecked(time)) continue;
 
-      // Convert TimeOfDay to DateTime for today
       DateTime alarmTime = DateTime(
         now.year,
         now.month,
@@ -78,21 +77,17 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
         time.minute,
       );
 
-      // If the time is in the past, schedule for tomorrow
       if (alarmTime.isBefore(now)) {
         alarmTime = alarmTime.add(const Duration(days: 1));
       }
 
-      // Calculate duration until the alarm
       final duration = alarmTime.difference(now);
 
       print('Scheduling alarm for $time in ${duration.inSeconds} seconds');
 
-      // Schedule the timer
       Timer timer = Timer(duration, () {
         if (mounted && !_isTimeChecked(time)) {
           _triggerAlarm(time);
-          // Reschedule for the next day
           _scheduleAlarms();
         }
       });
@@ -225,6 +220,22 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
     }
   }
 
+  void _showMedicationDetailsDialog(TimeOfDay time) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => MedicationReminderDialog(
+        time: time,
+        data: widget.data,
+        stopAlarmSound: _stopAlarmSound,
+        sendRequest: _sendRequest,
+        scheduleAlarms: _scheduleAlarms,
+        checkedStatus: checkedStatus,
+        resMassage: resMassage,
+      ),
+    );
+  }
+
   String _formatDate(dynamic dateInput) {
     try {
       DateTime date;
@@ -240,189 +251,6 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
     } catch (e) {
       return dateInput.toString();
     }
-  }
-
-  void _showMedicationDetailsDialog(TimeOfDay time) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog.fullscreen(
-        child: SafeArea(
-          child: Container(
-            color: Colors.white,
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.06),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.notification_important,
-                        color: AppColor.primaryColor, size: 32),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Medication Reminder',
-                        style: TextStyle(
-                          color: AppColor.primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: MediaQuery.of(context).size.width * 0.06,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon:
-                          Icon(Icons.close, color: Colors.grey[700], size: 32),
-                      onPressed: () {
-                        _stopAlarmSound();
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-                const Divider(),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                _buildDetailRow(
-                    icon: Icons.medication,
-                    label: 'Medication:',
-                    value: widget.data.name,
-                    fontSize: MediaQuery.of(context).size.width * 0.05),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-                _buildDetailRow(
-                    icon: Icons.medical_information,
-                    label: 'Dose:',
-                    value: '${widget.data.dose} mg',
-                    fontSize: MediaQuery.of(context).size.width * 0.05),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-                _buildDetailRow(
-                  icon: Icons.watch_later,
-                  label: 'Time:',
-                  value:
-                      MaterialLocalizations.of(context).formatTimeOfDay(time),
-                  fontSize: MediaQuery.of(context).size.width * 0.05,
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.015),
-                _buildDetailRow(
-                    icon: Icons.medical_services,
-                    label: 'Pills:',
-                    value: '${widget.data.amount}',
-                    fontSize: MediaQuery.of(context).size.width * 0.05),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: AppColor.accentGreen,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            vertical: MediaQuery.of(context).size.height * 0.02,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () async {
-                          setState(() {
-                            checkedStatus[time] = true;
-                          });
-                          _stopAlarmSound();
-                          await _sendRequest('http://192.168.4.1/Alarm');
-                          Navigator.of(context).pop();
-                          if (resMassage != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('API Response: $resMassage'),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          }
-                          _scheduleAlarms(); // Reschedule after marking as taken
-                        },
-                        child: Text(
-                          'Mark as Taken',
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width * 0.045,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.04),
-                    Expanded(
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor:
-                              AppColor.primaryColor.withOpacity(0.7),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            vertical: MediaQuery.of(context).size.height * 0.02,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          final now = DateTime.now();
-                          final laterTime = TimeOfDay(
-                            hour: (now.hour + ((now.minute + 15) ~/ 60)) % 24,
-                            minute: (now.minute + 15) % 60,
-                          );
-                          setState(() {
-                            widget.data.reminderTimes.add(laterTime);
-                            checkedStatus[laterTime] = false;
-                          });
-                          _stopAlarmSound();
-                          Navigator.of(context).pop();
-                          _scheduleAlarms(); // Reschedule after snoozing
-                        },
-                        child: Text(
-                          'Snooze 15 min',
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width * 0.045,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow({
-    required IconData icon,
-    required String label,
-    required String value,
-    required double fontSize,
-  }) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColor.primaryColor, size: fontSize * 1.2),
-        const SizedBox(width: 12),
-        Text(
-          label,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: fontSize,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: fontSize,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
   }
 
   @override
@@ -498,7 +326,7 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
                   ),
                 ],
               ),
-              SizedBox(height: spaceBetweenElements * 2),
+              SizedBox(height: 10),
               _buildInfoRow(
                 emoji: '💊',
                 text: 'Dose: ${widget.data.dose} mg',
@@ -624,7 +452,7 @@ class _CustomMedicineItemState extends State<CustomMedicineItem> {
         onTap: () {
           setState(() {
             checkedStatus[time] = !(checkedStatus[time] ?? false);
-            _scheduleAlarms(); // Reschedule when manually checking/unchecking
+            _scheduleAlarms();
           });
         },
         child: Container(
