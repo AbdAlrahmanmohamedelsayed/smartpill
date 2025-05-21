@@ -65,7 +65,6 @@ class ApiManagerAuth {
       if (response.statusCode == 200 || response.statusCode == 201) {
         AuthResponce authResponse = AuthResponce.fromJson(response.data);
 
-        // Save token, email, and username after signup
         await TokenManager.saveToken(
             authResponse.token, email, authResponse.displayName);
 

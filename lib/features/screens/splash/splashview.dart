@@ -40,18 +40,18 @@ class _SplashviewState extends State<Splashview> {
               FadeInDown(
                 child: Image.asset(
                   'assets/images/logo.png',
-                  width: 120,
+                  width: 140,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               FadeInUp(
                 delay: const Duration(seconds: 1),
                 child: Text(
                   'Smart Pill',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.accentGreen,
-                  ),
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColor.primaryColor),
                 ),
               ),
             ],
