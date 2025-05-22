@@ -40,7 +40,7 @@ class _SplashviewState extends State<Splashview> {
               FadeInDown(
                 child: Image.asset(
                   'assets/images/logo.png',
-                  width: 140,
+                  height: 140,
                 ),
               ),
               const SizedBox(height: 10),
