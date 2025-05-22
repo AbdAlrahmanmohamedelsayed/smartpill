@@ -36,7 +36,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
     super.initState();
     _imagePulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 800),
     )..repeat(reverse: true);
   }
 
@@ -48,101 +48,92 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Dialog.fullscreen(
       child: Container(
-        color: AppColor.whiteColor,
+        color: Colors.white,
         child: SafeArea(
           child: Stack(
             children: [
-              // Main content
+              Positioned(
+                top: screenHeight * 0.02,
+                right: screenWidth * 0.04,
+                child: Semantics(
+                  label: 'Close medication reminder',
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      color: theme.colorScheme.primary,
+                      size: screenWidth * 0.06,
+                    ),
+                    onPressed: () {
+                      widget.stopAlarmSound();
+                      Navigator.of(context).pop();
+                    },
+                    tooltip: 'Dismiss Alarm',
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.white.withOpacity(0.9),
+                      shape: const CircleBorder(),
+                      padding: EdgeInsets.all(screenWidth * 0.015),
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.06,
-                  vertical: screenHeight * 0.04,
+                  vertical: screenHeight * 0.06,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Header
-                    Column(
-                      children: [
-                        Text(
-                          'Medication Reminder',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: AppColor.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: screenWidth * 0.05,
-                            letterSpacing: 0.5,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 8,
-                                color: Colors.black.withOpacity(0.3),
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.01),
-                        // Close button
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Semantics(
-                            label: 'Close medication reminder',
-                            child: IconButton(
-                              icon: const Icon(Icons.close,
-                                  color: AppColor.primaryColor, size: 28),
-                              onPressed: () {
-                                widget.stopAlarmSound();
-                                Navigator.of(context).pop();
-                              },
-                              tooltip: 'Dismiss Alarm',
-                              splashRadius: 20,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Medication Reminder',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: screenWidth * 0.055,
+                        letterSpacing: 0.5,
+                      ),
                     ),
-                    // Image
+                    SizedBox(height: screenHeight * 0.03),
                     Expanded(
                       flex: 2,
                       child: Center(
                         child: ScaleTransition(
-                          scale: Tween(begin: 1.0, end: 1.1).animate(
+                          scale: Tween(begin: 1.0, end: 1.08).animate(
                             CurvedAnimation(
                               parent: _imagePulseController,
-                              curve: Curves.easeInOut,
+                              curve: Curves.easeInOutQuad,
                             ),
                           ),
                           child: Image.asset(
                             'assets/images/icons/medicine_icon.png',
-                            width: screenWidth * 0.5,
-                            height: screenWidth * 0.5,
+                            width: screenWidth * 0.4,
+                            height: screenWidth * 0.4,
                             fit: BoxFit.contain,
                             semanticLabel: 'Medication Reminder Icon',
                             errorBuilder: (context, error, stackTrace) => Icon(
                               Icons.medication,
-                              color: AppColor.primaryColor,
-                              size: screenWidth * 0.25,
+                              color: theme.colorScheme.primary,
+                              size: screenWidth * 0.18,
                             ),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    // Medication details in a grid
+                    SizedBox(height: screenHeight * 0.04),
                     Expanded(
                       flex: 3,
                       child: GridView.count(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 1.6,
+                        crossAxisSpacing: screenWidth * 0.05,
+                        mainAxisSpacing: screenHeight * 0.04,
+                        childAspectRatio: 1.9,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
@@ -150,36 +141,40 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                             label: '💊 Medication',
                             value: widget.data.name,
                             fontSize: screenWidth * 0.04,
+                            theme: theme,
                           ),
                           _buildDetailCard(
                             label: '💊 Dose',
                             value: '${widget.data.dose} mg',
                             fontSize: screenWidth * 0.04,
+                            theme: theme,
                           ),
                           _buildDetailCard(
                             label: 'Time',
                             value: MaterialLocalizations.of(context)
                                 .formatTimeOfDay(widget.time),
                             fontSize: screenWidth * 0.04,
+                            theme: theme,
                           ),
                           _buildDetailCard(
                             label: 'Pills',
                             value: '${widget.data.amount}',
                             fontSize: screenWidth * 0.04,
+                            theme: theme,
                           ),
                         ],
                       ),
                     ),
-                    // Action buttons
+                    SizedBox(height: screenHeight * 0.03),
                     Padding(
-                      padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+                      padding: EdgeInsets.only(bottom: screenHeight * 0.03),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           _buildAnimatedButton(
                             icon: Icons.check_circle,
                             label: 'Taken',
-                            color: Colors.amber[600]!,
+                            color: AppColor.accentGreen,
                             onPressed: () async {
                               setState(() {
                                 widget.checkedStatus[widget.time] = true;
@@ -187,23 +182,35 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                               widget.stopAlarmSound();
                               await widget
                                   .sendRequest('http://192.168.4.1/Alarm');
-                              Navigator.of(context).pop();
                               if (widget.resMassage != null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                        'API Response: ${widget.resMassage}'),
+                                      'API Response: ${widget.resMassage}',
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSecondary,
+                                      ),
+                                    ),
                                     duration: const Duration(seconds: 2),
+                                    backgroundColor:
+                                        theme.colorScheme.secondary,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
                                 );
                               }
                               widget.scheduleAlarms();
+                              Navigator.of(context).pop();
                             },
+                            theme: theme,
                           ),
                           _buildAnimatedButton(
                             icon: Icons.snooze,
                             label: 'Snooze',
-                            color: AppColor.primaryColor,
+                            color: theme.colorScheme.primary,
                             onPressed: () {
                               final now = DateTime.now();
                               final laterTime = TimeOfDay(
@@ -219,6 +226,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                               Navigator.of(context).pop();
                               widget.scheduleAlarms();
                             },
+                            theme: theme,
                           ),
                         ],
                       ),
@@ -238,44 +246,44 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
     required String label,
     required Color color,
     required VoidCallback onPressed,
+    required ThemeData theme,
   }) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.42,
-      decoration: BoxDecoration(
-        color: AppColor.whiteColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColor.primaryColor.withOpacity(0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 7,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColor.whiteColor,
-          foregroundColor: color,
-          padding: EdgeInsets.symmetric(
-            vertical: MediaQuery.of(context).size.height * 0.02,
-            horizontal: MediaQuery.of(context).size.width * 0.04,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0,
+    return GestureDetector(
+      onTap: onPressed,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: MediaQuery.of(context).size.width * 0.35,
+        padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.015,
+          horizontal: MediaQuery.of(context).size.width * 0.03,
         ),
-        icon: Icon(icon, size: 24, color: color),
-        label: Text(
-          label,
-          style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width * 0.04,
-            fontWeight: FontWeight.w600,
-            color: color,
-          ),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.7)),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 22, color: AppColor.textColorPrimary),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.015),
+            Text(
+              label,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontSize: MediaQuery.of(context).size.width * 0.035,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -284,15 +292,16 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
     required String label,
     required String value,
     required double fontSize,
+    required ThemeData theme,
   }) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColor.whiteColor,
+        color: Colors.white.withOpacity(0.95),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: theme.colorScheme.primary.withOpacity(0.1),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -304,20 +313,20 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
               fontSize: fontSize * 0.9,
-              color: AppColor.primaryColor,
-              letterSpacing: 0.3,
+              color: theme.colorScheme.primary,
+              letterSpacing: 0.4,
             ),
             semanticsLabel: label.replaceFirst('💊 ', ''),
           ),
           const SizedBox(height: 6),
           Text(
             value,
-            style: TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: fontSize,
-              color: AppColor.primaryColor.withOpacity(0.9),
+              color: theme.colorScheme.primary.withOpacity(0.9),
               fontWeight: FontWeight.w500,
             ),
             overflow: TextOverflow.ellipsis,
