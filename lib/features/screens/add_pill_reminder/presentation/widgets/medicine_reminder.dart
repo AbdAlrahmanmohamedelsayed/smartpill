@@ -54,11 +54,10 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
 
     return Dialog.fullscreen(
       child: Container(
-        color: Colors.white, // Pure white background
+        color: Colors.white,
         child: SafeArea(
           child: Stack(
             children: [
-              // Close button at the top
               Positioned(
                 top: screenHeight * 0.02,
                 right: screenWidth * 0.04,
@@ -68,8 +67,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                     icon: Icon(
                       Icons.close,
                       color: theme.colorScheme.primary,
-                      size: screenWidth *
-                          0.06, // Slightly smaller for responsiveness
+                      size: screenWidth * 0.06,
                     ),
                     onPressed: () {
                       widget.stopAlarmSound();
@@ -84,7 +82,6 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                   ),
                 ),
               ),
-              // Main content
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.06,
@@ -93,20 +90,17 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Header
                     Text(
                       'Medication Reminder',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w700,
-                        fontSize: screenWidth *
-                            0.055, // Slightly smaller for responsiveness
+                        fontSize: screenWidth * 0.055,
                         letterSpacing: 0.5,
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.03),
-                    // Image
                     Expanded(
                       flex: 2,
                       child: Center(
@@ -133,13 +127,12 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.04),
-
                     Expanded(
                       flex: 3,
                       child: GridView.count(
                         crossAxisCount: 2,
-                        crossAxisSpacing: screenWidth * 0.04,
-                        mainAxisSpacing: screenHeight * 0.02,
+                        crossAxisSpacing: screenWidth * 0.05,
+                        mainAxisSpacing: screenHeight * 0.04,
                         childAspectRatio: 1.9,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -173,7 +166,6 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.03),
-                    // Action buttons
                     Padding(
                       padding: EdgeInsets.only(bottom: screenHeight * 0.03),
                       child: Row(
@@ -197,13 +189,12 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                                       'API Response: ${widget.resMassage}',
                                       style:
                                           theme.textTheme.bodyMedium?.copyWith(
-                                        color: theme
-                                            .colorScheme.onPrimaryContainer,
+                                        color: theme.colorScheme.onSecondary,
                                       ),
                                     ),
                                     duration: const Duration(seconds: 2),
                                     backgroundColor:
-                                        theme.colorScheme.primaryContainer,
+                                        theme.colorScheme.secondary,
                                     behavior: SnackBarBehavior.floating,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -219,7 +210,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                           _buildAnimatedButton(
                             icon: Icons.snooze,
                             label: 'Snooze',
-                            color: AppColor.accentGreen,
+                            color: theme.colorScheme.primary,
                             onPressed: () {
                               final now = DateTime.now();
                               final laterTime = TimeOfDay(
@@ -267,12 +258,12 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
           horizontal: MediaQuery.of(context).size.width * 0.03,
         ),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withOpacity(0.7)),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.15),
+              color: color.withOpacity(0.3),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -281,14 +272,14 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 22, color: color),
+            Icon(icon, size: 22, color: AppColor.textColorPrimary),
             SizedBox(width: MediaQuery.of(context).size.width * 0.015),
             Text(
               label,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontSize: MediaQuery.of(context).size.width * 0.035,
                 fontWeight: FontWeight.w600,
-                color: color,
+                color: theme.colorScheme.onSecondary,
               ),
             ),
           ],
@@ -304,9 +295,9 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
     required ThemeData theme,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12), // Slightly smaller padding
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95), // Matches white background
+        color: Colors.white.withOpacity(0.95),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
