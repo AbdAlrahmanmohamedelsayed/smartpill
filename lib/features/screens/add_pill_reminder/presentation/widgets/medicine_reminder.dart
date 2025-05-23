@@ -105,7 +105,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                       flex: 2,
                       child: Center(
                         child: ScaleTransition(
-                          scale: Tween(begin: 1.0, end: 1.08).animate(
+                          scale: Tween(begin: 1.5, end: 1.08).animate(
                             CurvedAnimation(
                               parent: _imagePulseController,
                               curve: Curves.easeInOutQuad,
@@ -210,7 +210,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
                           _buildAnimatedButton(
                             icon: Icons.snooze,
                             label: 'Snooze',
-                            color: theme.colorScheme.primary,
+                            color: AppColor.buttonPrimary,
                             onPressed: () {
                               final now = DateTime.now();
                               final laterTime = TimeOfDay(
@@ -272,7 +272,7 @@ class _MedicationReminderDialogState extends State<MedicationReminderDialog>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 22, color: AppColor.textColorPrimary),
+            Icon(icon, size: 22, color: AppColor.whiteColor),
             SizedBox(width: MediaQuery.of(context).size.width * 0.015),
             Text(
               label,
