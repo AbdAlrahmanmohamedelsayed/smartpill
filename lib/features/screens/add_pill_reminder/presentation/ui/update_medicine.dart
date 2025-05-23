@@ -182,11 +182,30 @@ class _EditMedicineViewState extends State<EditMedicineView> {
   Widget _buildMedicationTimesFields() {
     return Column(
       children: List.generate(_medicationTimes.length, (index) {
-        return GestureDetector(
+        return CustomTimePickerButton(
+          label: 'Time ${index + 1}*',
+          selectedTime: _medicationTimes[index],
           onTap: () async {
             TimeOfDay? pickedTime = await showTimePicker(
               context: context,
               initialTime: _medicationTimes[index] ?? TimeOfDay.now(),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: AppColor.primaryColor,
+                      onPrimary: AppColor.whiteColor,
+                      surface: AppColor.whiteColor,
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColor.primaryColor,
+                      ),
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
             );
             if (pickedTime != null) {
               setState(() {
@@ -198,15 +217,6 @@ class _EditMedicineViewState extends State<EditMedicineView> {
               });
             }
           },
-          child: AbsorbPointer(
-            child: CustomTextFiled(
-              controller: TextEditingController(
-                text: _medicationTimes[index]?.format(context) ?? '',
-              ),
-              label: 'Time ${index + 1}*',
-              hint: 'Select time',
-            ),
-          ),
         );
       }),
     );
@@ -220,6 +230,23 @@ class _EditMedicineViewState extends State<EditMedicineView> {
           initialDate: _selectedStartDate ?? DateTime.now(),
           firstDate: DateTime.now(),
           lastDate: DateTime(2027),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: AppColor.primaryColor,
+                  onPrimary: AppColor.whiteColor,
+                  surface: AppColor.whiteColor,
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColor.primaryColor,
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          },
         );
 
         if (pickedDate != null) {
@@ -323,5 +350,64 @@ class _EditMedicineViewState extends State<EditMedicineView> {
         );
       }
     }
+  }
+}
+
+class CustomTimePickerButton extends StatelessWidget {
+  final TimeOfDay? selectedTime;
+  final String label;
+  final VoidCallback? onTap;
+
+  const CustomTimePickerButton({
+    super.key,
+    required this.selectedTime,
+    required this.label,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        decoration: BoxDecoration(
+          color: AppColor.whiteColor,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: AppColor.primaryColor.withOpacity(0.5)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColor.primaryColor,
+              ),
+            ),
+            Text(
+              selectedTime != null
+                  ? selectedTime!.format(context)
+                  : 'Select time',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: selectedTime != null
+                    ? AppColor.textColorPrimary
+                    : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
