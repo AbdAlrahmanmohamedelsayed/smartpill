@@ -80,7 +80,9 @@ class _MenuViewState extends State<MenuView> {
               ),
             ),
             CustomListtile(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, PageRoutesName.admin);
+              },
               imagePath: 'assets/images/icons/sharing.png',
               tittle: 'Share Smart Pill',
             ),

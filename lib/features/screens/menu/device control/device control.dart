@@ -23,7 +23,7 @@ class _TestViewState extends State<TestView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Image.asset(width: 100, 'assets/images/logo.png'),
+            Image.asset(width: 120, 'assets/images/logo.png'),
             Text(
               resMassage,
               style: theme.textTheme.bodySmall,

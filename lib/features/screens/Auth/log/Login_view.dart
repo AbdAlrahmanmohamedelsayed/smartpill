@@ -289,7 +289,7 @@ class _LoginViewState extends State<LoginView> {
         Future.delayed(Duration(seconds: 1), () {
           if (userRole == "user") {
             Navigator.pushReplacementNamed(context, PageRoutesName.layout);
-          } else if (userRole == "admin") {
+          } else if (userRole == "caregiver") {
             // Navigate to admin layout
             Navigator.pushReplacementNamed(context, PageRoutesName.admin);
           } else {

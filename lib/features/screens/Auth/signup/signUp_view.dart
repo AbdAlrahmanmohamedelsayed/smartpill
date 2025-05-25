@@ -13,7 +13,7 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   final _formKey = GlobalKey<FormState>();
-  String? userType = 'user'; // Set default value to 'user'
+  String? userType = 'user';
   bool isUserSelected = true;
   bool isCareGiverSelected = false;
   bool isObscure = true;
@@ -182,7 +182,6 @@ class _SignupViewState extends State<SignupView> {
                   isCareGiverSelected = false;
                   userType = 'user';
                 } else if (!isCareGiverSelected) {
-                  // Ensure at least one option is selected
                   isUserSelected = true;
                   userType = 'user';
                 }
@@ -193,7 +192,6 @@ class _SignupViewState extends State<SignupView> {
                   isUserSelected = false;
                   userType = 'caregiver';
                 } else if (!isUserSelected) {
-                  // Ensure at least one option is selected
                   isCareGiverSelected = true;
                   userType = 'caregiver';
                 }
@@ -266,7 +264,6 @@ class _SignupViewState extends State<SignupView> {
       );
 
       if (response.token != null) {
-        // Show success dialog
         _showSignupSuccessDialog(context, userType);
       } else {
         _showSignupFailureDialog(context, "Sign Up failed");
@@ -285,7 +282,7 @@ class _SignupViewState extends State<SignupView> {
           if (userType == "user") {
             Navigator.pushNamedAndRemoveUntil(
                 context, PageRoutesName.layout, (route) => false);
-          } else if (userType == "admin") {
+          } else if (userType == "caregiver") {
             Navigator.pushNamedAndRemoveUntil(
                 context, PageRoutesName.admin, (route) => false);
           } else {
